@@ -44,3 +44,34 @@ You function should return the max size we can fill in the given backpack.
         return 0;
     }
 }
+
+
+//rolling array
+public class Solution {
+    /**
+     * @param m: An integer m denotes the size of a backpack
+     * @param A: Given n items with size A[i]
+     * @return: The maximum size
+     */
+    public int backPack(int m, int[] A) {
+        // write your code here
+        boolean[] dp = new boolean[m + 1];
+        dp[0] = true;
+        for (int i = 0; i <= A.length - 1; i++) {
+            boolean[] ndp = new boolean[m + 1];
+            for (int j = 0; j <= m; j++) {
+                ndp[j] = dp[j];
+                if (j - A[i] >= 0) {
+                    ndp[j] = ndp[j]||dp[j - A[i]];
+                }
+            }
+            dp = ndp;
+        }
+        for (int k = m; k>=0;k--) {
+            if (dp[k]) {
+                return k;
+            }
+        }
+        return -1;
+    }
+}
