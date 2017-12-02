@@ -60,3 +60,53 @@ They start copying books at the same time and they all cost 1 minute to copy 1 p
         return dp[k - 1][n - 1];
     }
 }
+
+
+public class Solution {
+    /*
+     * @param pages: an array of integers
+     * @param k: An integer
+     * @return: an integer
+     */
+    public int copyBooks(int[] pages, int k) {
+        // write your code here
+        int n = pages.length;
+        if (n == 0) {
+            return 0;
+        }
+        int[] dp = new int[n];
+        int[] sum = new int[n + 1];
+        int[] tomax = new int[n];
+        tomax[0] = pages[0];
+        for (int i = 1; i < n; i++) {
+            tomax[i] = Math.max(tomax[i - 1], pages[i]);
+        }
+        if (k >= n) {
+            return tomax[n - 1];
+        }
+        for (int i = 1; i < sum.length; i++) {
+            sum[i] = sum[i - 1] + pages[i - 1];
+        }
+        int[] tmp = dp;
+        tmp[0] = pages[0];
+        for (int i = 1; i <= n - 1; i++){
+            tmp[i] = tmp[i - 1] + pages[i];
+        }
+        for (int i = 1; i < k; i++) {
+            int[] ndp = new int[n];
+            for (int j = i; j < n; j++) {
+                if (j == i) {
+                    ndp[j] = tomax[i];
+                    continue;
+                }
+                ndp[j] = Integer.MAX_VALUE;
+                for (int t = i - 1; t < j; t++) {
+                   int p = Math.max(dp[t],  sum[j + 1] - sum[t + 1]);
+                   ndp[j] = Math.min(ndp[j], p);
+                }
+            }
+            dp = ndp;
+        }
+        return dp[n - 1];
+    }
+}
