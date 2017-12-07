@@ -41,3 +41,29 @@ n = 5, return true.
         return dp[n];
     }
 }
+
+
+public class Solution {
+    /*
+     * @param n: An integer
+     * @return: A boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int n) {
+        // write your code here
+        if (n == 0) {
+            return false;
+        }
+        if (n <= 2) {
+            return true;
+        }
+        boolean pre1 = true;
+        boolean pre2 = true;
+        boolean win = false;
+        for (int i = 3; i <= n; i++) {
+            win = !pre1 || !pre2;
+            pre2 = pre1;
+            pre1 = win;
+        }
+        return win;
+    }
+}
