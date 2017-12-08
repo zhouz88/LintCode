@@ -27,26 +27,30 @@ isMatch("aab", "c*a*b") → true
 */
 class Solution {
     public boolean isMatch(String s, String p) {
-        int m = s.length();
-        int n = p.length();
-        boolean[][] dp = new boolean[m+1][n+1];
-        dp[0][0] = true;
         s = " " + s;
         p = " " + p;
-    for (int i = 0; i <= m; i++) {
-        for (int j = 1; j <= n ; j++) {
-        if (j > 1 && p.charAt(j) == '*') {
-            if (p.charAt(j-1) == '.' || p.charAt(j-1)  == s.charAt(i)) {
-                dp[i][j] = (j >= 2 && dp[i][j-2]) || (i >= 1 && dp[i-1][j]);
-            } else {
-                dp[i][j] = (j >= 2 && dp[i][j-2]);
+        int m = s.length(), n = p.length();
+
+        boolean[][] dp = new boolean[m][n];
+        dp[0][0] = true;
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (p.charAt(j) == '*') {
+                    if (j >= 1 && (s.charAt(i) == p.charAt(j - 1) || p.charAt(j - 1) == '.')) {
+                        if (i >= 1) dp[i][j] |= dp[i - 1][j];
+                        if (j >= 2) dp[i][j] |= dp[i][j - 2];
+                    } else {
+                        if (j >= 2) dp[i][j] |= dp[i][j - 2];
+                    }
+                } else {
+                    if (s.charAt(i) == p.charAt(j) || p.charAt(j) == '.') {
+                        if (i >= 1 && j >= 1) dp[i][j] = dp[i - 1][j - 1];
+                    }
+                }
             }
         }
-        if (i > 0 && p.charAt(j) != '*') {
-            dp[i][j] = (p.charAt(j)  == s.charAt(i) || p.charAt(j) == '.'? dp[i-1][j-1] : false);
-        }
-        }
-    }
-        return dp[m][n];
+        
+        return dp[m - 1][n - 1];
     }
 }
