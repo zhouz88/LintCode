@@ -54,3 +54,27 @@ class Solution {
         return dp[m - 1][n - 1];
     }
 }
+
+class Solution {
+    public boolean isMatch(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+        int i, j;
+        for (i = 0; i <= m; i++) {
+            for (j = 0; j <= n; j++) {
+                if (j >= 1 && p.charAt(j - 1) == '*') {
+                    if (j >= 2) dp[i][j] |= dp[i][j - 2];
+                    if (j >= 2 && i >= 1 && (s.charAt(i - 1) == p.charAt(j - 2) || p.charAt(j - 2) == '.')) {
+                        dp[i][j] |= dp[i - 1][j];
+                    }
+                } else if (j > 0 && i > 0 && (p.charAt(j - 1) == s.charAt(i - 1) || p.charAt(j - 1) == '.')) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+}
