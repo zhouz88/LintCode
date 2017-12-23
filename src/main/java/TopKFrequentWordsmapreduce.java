@@ -11,6 +11,7 @@
  * }
  */
 import java.util.*;
+
 public class TopKFrequentWords {
 
     public static class Map {
@@ -19,7 +20,6 @@ public class TopKFrequentWords {
             // Output the results into output buffer.
             // Ps. output.collect(String key, int value);
             String[] s = value.content.split("\\s+");
-            
             for (String k : s) {
                 output.collect(k, 1);
             }
@@ -28,7 +28,7 @@ public class TopKFrequentWords {
 
     public static class Reduce {
         int K;
-        Map<String, Integer> map = new HashMap<>();
+        java.util.Map<String, Integer> map = new HashMap<>();
         
         public void setup(int k) {
             // initialize your data structure here
@@ -47,13 +47,13 @@ public class TopKFrequentWords {
         public void cleanup(OutputCollector<String, Integer> output) {
             // Output the top k pairs <word, times> into output buffer.
             // Ps. output.collect(String key, Integer value);
-           PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(new Comparator<Map.Entry<String, Integer>>(){
-           public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b) {
+           java.util.PriorityQueue<java.util.Map.Entry<String, Integer>> pq = new PriorityQueue<>(new Comparator<java.util.Map.Entry<String, Integer>>(){
+           public int compare(java.util.Map.Entry<String, Integer> a,java.util.Map.Entry<String, Integer> b) {
                return a.getValue() - b.getValue()  == 0 ? (b.getKey()).compareTo(a.getKey()): a.getValue() - b.getValue();
            } 
             });
             int cnt = 0;
-            for (Map.Entry<String, Integer> e : map.entrySet()) {
+            for (java.util.Map.Entry<String, Integer> e : map.entrySet()) {
                 if (cnt < K) {
                     pq.add(e);
                     cnt++;
@@ -62,8 +62,12 @@ public class TopKFrequentWords {
                     pq.poll();
                 }
             }
+            java.util.List<java.util.Map.Entry<String, Integer>> list = new ArrayList<>();
             while (!pq.isEmpty()) {
-                Map.Entry<String, Integer> e = pq.poll();
+                java.util.Map.Entry<String, Integer> e = pq.poll();
+                list.add(0, e);
+            }
+            for (java.util.Map.Entry<String, Integer> e : list) {
                 output.collect(e.getKey(), e.getValue());
             }
         }
