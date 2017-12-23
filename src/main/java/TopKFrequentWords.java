@@ -43,36 +43,27 @@ class Solution {
         for (String t : words) 
             map.put(t, map.getOrDefault(t, 0) + 1);
         
-        PriorityQueue<Point> pq = new PriorityQueue<>(new Comparator<Point>(){
-           public int compare(Point a, Point b) {
-               return a.count - b.count == 0 ? (b.s).compareTo(a.s): a.count - b.count;
+        PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(new Comparator<Map.Entry<String, Integer>>(){
+           public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b) {
+               return a.getValue() - b.getValue()  == 0 ? (b.getKey()).compareTo(a.getKey()): a.getValue() - b.getValue();
            } 
         });
         
         int cnt = 0;
         for (Map.Entry<String, Integer> e : map.entrySet()) {
             if (cnt < k) {
-                pq.add(new Point(e.getKey(), e.getValue()));
+                pq.add(e);
                 cnt++;
             } else {
-                pq.add(new Point(e.getKey(), e.getValue()));
+                pq.add(e);
                 pq.poll();
             }
         }
         
         while (!pq.isEmpty()) {
-            res.add(0, pq.poll().s);
+            res.add(0, pq.poll().getKey());
         }
         
         return res;
-    }
-    
-    class Point {
-        String s;
-        int count;
-        Point(String s, int a) {
-            this.s = s;
-            count = a;
-        }
     }
 }
