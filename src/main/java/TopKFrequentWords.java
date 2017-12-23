@@ -55,10 +55,8 @@ class Solution {
                 pq.add(new Point(e.getKey(), e.getValue()));
                 cnt++;
             } else {
-                if (pq.peek().count<e.getValue() || (pq.peek().count==e.getValue()&&(pq.peek().s).compareTo(e.getKey())>0)) {
-                    pq.poll();
-                    pq.add(new Point(e.getKey(), e.getValue()));
-                }
+                pq.add(new Point(e.getKey(), e.getValue()));
+                pq.poll();
             }
         }
         
