@@ -37,7 +37,7 @@ return 5
         pq.add(start);
         boolean[][] visited = new boolean[m][n];
         visited[0][0] = true;
-        int[][] directions = {{1, 0},{-1, 0},{0, 1},{0, -1}};
+        int[][] directions = {{1, 0},{0, 1}};
         
         while (!pq.isEmpty()) {
             int[] node = pq.poll();
