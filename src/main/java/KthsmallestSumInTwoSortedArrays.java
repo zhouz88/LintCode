@@ -70,3 +70,46 @@ public class Solution {
     }
 };
 
+
+public class Solution {
+    /**
+     * @param A an integer arrays sorted in ascending order
+     * @param B an integer arrays sorted in ascending order
+     * @param k an integer
+     * @return an integer
+     */
+    public int kthSmallestSum(int[] A, int[] B, int k) {
+        int[][] directions = {{0, 1}, {1, 0}};
+        
+        // directions is two dimensional!!!!!!!!!!! int[][] not int[]
+        PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>(){
+            @Override
+            public int compare(int[] a, int[] b) {
+                return (A[a[0]] + B[a[1]]) - (A[b[0]] + B[b[1]]);
+            }
+        });
+        
+        boolean[][] visited = new boolean[A.length][B.length];
+        visited[0][0] = true;
+        pq.add(new int[]{0, 0});
+        
+        for (int i = 0; i < k; i++) {
+            int[] node = pq.poll();
+            if (i == k - 1) 
+                return A[node[0]] + B[node[1]];
+                
+            for (int[] dir : directions) {
+                int x = node[0] + dir[0];
+                int y = node[1] + dir[1];
+                
+                if (x>=A.length || y >= B.length || visited[x][y]) continue;
+                visited[x][y] = true;
+                pq.add(new int[]{x, y});
+            }
+    
+        }
+        
+        throw new RuntimeException();
+    }
+}
+
