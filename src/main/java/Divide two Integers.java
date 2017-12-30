@@ -32,7 +32,7 @@ class Solution {
         
         long total = d;
         long idx = 1; 
-        while (total + total <= D) {
+        while (total + total <= D) { // take care !!!!!!
             idx = idx + idx;
             total = total + total;            
         }
