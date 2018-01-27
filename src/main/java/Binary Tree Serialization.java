@@ -1,4 +1,5 @@
- 7. Binary Tree Serialization
+/* 
+7. Binary Tree Serialization
 
     Description
     Notes
@@ -31,7 +32,7 @@ import java.util.Queue;
 
  */
 
-
+*/
 public class Solution {
     /**
      * This method will be invoked first, you should design your own algorithm
