@@ -1,77 +1,82 @@
 import java.util.HashMap;
 import java.util.Map;
 
-class LRUCache {
-class ListNode{
-    int key;
-    int val;
-    ListNode pre;
-    ListNode next;
-    ListNode(int key, int val) {
-        this.key = key;
-        this.val = val;
-    }
-}
-
-    Map<Integer, ListNode> map = new HashMap<>();
-    ListNode head;
-    ListNode tail;
-    int cap;
-
+public class LRUCache {
+    
+    private ListNode head;
+    private ListNode tail;
+    private Map<Integer, ListNode> map;
+    private int cap;
+    
     public LRUCache(int capacity) {
-        cap = capacity;
+        // do intialization if necessary
+        map = new HashMap<>();
+        head = new ListNode(-1, 0);
+        tail = new ListNode(-2, 0);
+        head.next = tail;
+        tail.pre = head;
+        this.cap = capacity;
+    }
+    
+    public int get(int key) {
+        if (!map.containsKey(key)) {
+            return -1;
+        }
+        int ret = map.get(key).value;
+        ListNode tmp = remove(key);
+        add(tmp, key);
+        return ret;
+    }
+    
+    private ListNode remove(int key) {
+        ListNode tmp = map.get(key);
+        ListNode next = tmp.next;
+        tmp.pre.next = next;
+        next.pre = tmp.pre;
+        tmp.pre = null;
+        tmp.next = null;
+        map.remove(key);
+        return tmp;
+    }
+    
+    private void add(ListNode tmp, int key) {
+        tail.pre.next = tmp;
+        tmp.next = tail;
+        ListNode a = tail.pre;
+        tail.pre = tmp;
+        tmp.pre = a;
+        map.put(key, tmp);
     }
 
-    public void set(int key, int value) {
+    /*
+     * @param key: An integer
+     * @param value: An integer
+     * @return: nothing
+     */
+    public void put(int key, int value) {
+        // write your code here
         if (map.containsKey(key)) {
-            ListNode tmp = map.get(key);
-            tmp.val = value;
-            remove(tmp);
-            addEnd(tmp);
+            get(key);
+            map.get(key).value = value;
         } else {
             if (map.size() < cap) {
-                addEnd(new ListNode(key, value));
+                add(new ListNode(key, value), key);
             } else {
-                remove(head);
-                addEnd(new ListNode(key, value));
+                int oldKey = head.next.key;
+                remove(oldKey);
+                add(new ListNode(key,value), key);
             }
         }
     }
-
-    public int get(int key) {
-        if (!map.containsKey(key)) return -1;
-        ListNode tmp = map.get(key);
-        remove(tmp);
-        addEnd(tmp);
-        return tmp.val;
-    }
-
-    public void remove(ListNode p) {
-        map.remove(p.key);
-        if (head == p && p == tail) {
-            head = null;
-            tail = null;
-        } else if (p == head) {
-            head = head.next;
-            p.next = null;
-        } else if (tail == p) {
-            tail = tail.pre;
-            p.next = null;
-        } else {
-            p.pre.next = p.next;
-            p.next.pre = p.pre;
-        }
-    }
-
-    public void addEnd(ListNode p) {
-        map.put(p.key, p);
-        if (head != null && tail != null) {
-            tail.next = p;
-            p.pre = tail;
-            tail = p;
-        } else if (head == null && tail == null) {
-            head = p;
-            tail = p;
+    
+    private static class ListNode {
+        int key;
+        int value;
+        ListNode pre, next;
+        
+        public ListNode(int key, int value) { 
+            this.key = key;
+            this.value = value;
         }
     }
 }
