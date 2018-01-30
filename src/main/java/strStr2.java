@@ -62,65 +62,52 @@ public class Solution {
 }
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Solution {
-    /**
-     * @param source a source string
-     * @param target a target string
-     * @return an integer as index
+    /*
+     * @param source: A source string
+     * @param target: A target string
+     * @return: An integer as index
      */
     public int strStr2(String source, String target) {
-        if(target == null) {
+        // write your code here
+        if (source == null || target == null) {
             return -1;
         }
-        int m = target.length();
-        if(m == 0 && source != null) {
+        if ("".equals(target)) {
             return 0;
         }
+        long hash = 0;
+        char[] charArray = source.toCharArray();
+        Set<Integer> set = new HashSet<>();
+        long[] ret = new long[source.length()];
         
-        if(source == null) {
-            return -1;
-        }
-        int n = source.length();
-        if(n == 0) {
-            return -1;
-        }
-
-        // mod could be any big integer
-        // just make sure mod * 33 wont exceed max value of int.
-        int mod = Integer.MAX_VALUE / 33;
-        int hash_target = 0;
-
-        // 33 could be something else like 26 or whatever you want
-        for (int i = 0; i < m; ++i) {
-            hash_target = (hash_target * 33 + target.charAt(i) - 'a') % mod;
-            if (hash_target < 0) {
-                hash_target += mod;
+        int i, len = target.length();
+        
+        for (i = 0; i < charArray.length; i++) {
+            hash = hash + (long) charArray[i];
+            if (i >= len - 1) {
+                ret[i - len + 1] = hash;
+                hash -= (long) charArray[i - len + 1];
             }
         }
-
-        int m33 = 1;
-        for (int i = 0; i < m - 1; ++i) {
-            m33 = m33 * 33 % mod;
+        
+        long total = 0;
+        
+        for (char ch : target.toCharArray()) {
+            total += (long) ch;
         }
-
-        int value = 0;
-        for (int i = 0; i < n; ++i) {
-            if (i >= m) {
-                value = (value - m33 * (source.charAt(i - m) - 'a')) % mod;
-            }
-
-            value = (value * 33 + source.charAt(i) - 'a') % mod;
-            if (value < 0) {
-                value += mod;
-            }
-
-            if (i >= m - 1 && value == hash_target) {
-                // you have to double check by directly compare the string
-                if (target.equals(source.substring(i - m + 1, i + 1))) {
-                    return i - m + 1;
+        
+        for (i = 0; i < source.length(); i++) {
+            if (ret[i] == total) {
+                if (source.startsWith(target, i)) {
+                    return i;
                 }
             }
         }
+        
         return -1;
     }
 }
