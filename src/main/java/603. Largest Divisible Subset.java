@@ -21,9 +21,9 @@ public class Solution {
         x = 0;
         int max = 1;
         for (i = 1; i < nums.length; i++) {
-            for (j = 0; j < i; j++) {
+            for (j = i - 1; j >= 0; j--) {
                 if (nums[i] % nums[j] == 0) {
-                    dp[i] = dp[j] + 1;
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
                 }
             }
             max = Math.max(max, dp[i]);
