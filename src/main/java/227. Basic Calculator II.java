@@ -1,5 +1,4 @@
 class Solution {
-//https://leetcode.com/problems/basic-calculator-ii/description/
     public int calculate(String s) {
         int i;
         char sign = '+';
@@ -22,16 +21,17 @@ class Solution {
                         pre /= tmp;
                         break;
                     case '+':
-                        sum += tmp;
-                        pre = 1;
+                        sum += pre;
+                        pre = tmp;
                         break;
                     case '-':
-                        sum -= tmp;
-                        pre = -1;
+                        sum += pre;
+                        pre = -tmp;
                         break;
                 }
             }
         }
+        sum += pre;
         return sum;
     }
 
