@@ -6,7 +6,7 @@ public class Solution {
     public String countAndSay(int n) {
         // write your code here
         String tmp = 1 + "";
-        while (n > 1) {
+        while (n > 1) { //wrong2
             tmp = generateSequence(tmp);
             n--;
         }
@@ -27,7 +27,7 @@ public class Solution {
             } else {
                 sb.append(cnt);
                 sb.append(array[i - 1]);
-                cnt = 1;
+                cnt = 1;//wrong 1
             }
         }
         if (cnt != 0) {
