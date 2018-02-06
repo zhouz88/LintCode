@@ -13,7 +13,7 @@ public class Solution extends Reader4 {
             for (int i = 0; i < size && offset < n; i++) {
                 buf[offset++] = buf4[i];
             }
-            if (size < 4 || offset == n) {
+            if (size == 0 || offset == n) {
                 return offset;
             }
         }
