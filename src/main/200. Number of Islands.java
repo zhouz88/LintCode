@@ -57,3 +57,71 @@ class Solution {
         return start;
     }
 }
+
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+
+
+public class Solution {
+    /*
+     * @param n: An integer
+     * @param m: An integer
+     * @param operators: an array of point
+     * @return: an integer array
+     */
+    public List<Integer> numIslands2(int m, int n, Point[] operators) {
+        // write your code here
+        List<Integer> ret = new ArrayList<>();
+        if (operators == null) {
+            return ret;
+        }
+        int[] map = new int[m * n];
+        for (int i = 0; i < map.length; i++) {
+            map[i] = i;
+        }
+        int[][] grid = new int[m][n];
+
+        int cnt = 0;
+        final int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+        for (int i = 0; i < operators.length; i++) {
+            Point tmp = operators[i];
+            if (grid[tmp.x][tmp.y] == 0) cnt++;
+            grid[tmp.x][tmp.y] = 1;
+            for (int[] dir : directions) {
+                int x = dir[0] + tmp.x;
+                int y = dir[1] + tmp.y;
+                if (x < 0 || y < 0 || x >= m || y >= n||grid[x][y]==0) {
+                    continue;
+                }
+                int fa = find(x * n + y, map);
+                if (fa != tmp.x * n + tmp.y) {//uion
+                    map[fa] = tmp.x * n + tmp.y;
+                    cnt--;
+                }
+            }
+            ret.add(cnt);
+        }
+        return ret;
+    }
+        
+    private int find(int start, int[] map) {
+            while (start != map[start]) {
+                start = map[start];
+            }
+            return start;
+    }
+}
