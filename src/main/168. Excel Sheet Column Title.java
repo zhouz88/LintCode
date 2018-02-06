@@ -10,3 +10,13 @@ Solution {
         return sb.toString();
     }
 }
+
+class Solution {
+    public int titleToNumber(String s) {
+        int tmp = 0;
+        for (int i = 0; i < s.length(); i++) {
+            tmp = 26 * tmp + (s.charAt(i) - 'A' + 1);
+        }
+        return tmp;
+    }
+}
