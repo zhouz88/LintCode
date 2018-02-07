@@ -1,4 +1,10 @@
- private static void quickSort(int[] nums, int start, int end) {
+
+
+public class QuickSort{
+    private QuickSort() {
+        
+    }
+    public static void quickSort(int[] nums, int start, int end) {
         if (start >= end) {
             return;
         }
@@ -22,3 +28,10 @@
         quickSort(nums, start, r);
         quickSort(nums, r + 1, end);
     }
+
+    private static void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}
