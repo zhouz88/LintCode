@@ -7,8 +7,8 @@ class Solution {
             sb.insert(0, map[num & 0b1111]);
             num = (num >>> 4);
         }
-        System.out.println( -16 >> 1); //区别 移动正数部分4， 最后把正数再变为负数
-        System.out.println( -16 >>> 1);//直接移动负数-4的（也就是4的反码+1,
+        System.out.println( -16 >> 1); //区别 移动正数部分16， 最后把正数再变为负数 得到 -8
+        System.out.println( -16 >>> 1);//直接移动负数-16的（也就是4的反码+1,)
         return sb.toString();
     }
     
