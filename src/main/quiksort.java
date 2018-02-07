@@ -6,7 +6,7 @@
 
         int l = start, r = end;
         while (l <= r) {
-            while (l <= r && nums[l] < pivot) {
+            while (l <= r && nums[l] < pivot) { //l fast 比 r大的都是大于等于pivot的
                 l++;
             }
             while (l <= r && nums[r] > pivot) {
