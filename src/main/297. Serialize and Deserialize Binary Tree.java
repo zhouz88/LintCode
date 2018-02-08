@@ -22,7 +22,7 @@ public class Codec {
         StringBuilder sb = new StringBuilder();
         Queue<TreeNode> q = new LinkedList<>();
         q.add(root);
-        sb.append(root.val + ",");
+        sb.append(root.val + ",");// every node has four types of children “# val” "val #" "val val" "# #"
         while (!q.isEmpty()) {
             TreeNode node = q.poll();
             if (node.left != null) {
