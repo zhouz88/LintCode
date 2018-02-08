@@ -36,3 +36,99 @@ class Solution {
         return numberSeen && numberAfterESeen;
     }
 }
+
+//
+class Solution {
+    public boolean isNumber(String s) {
+        s = s.trim();
+        int i = 0;
+        if (i == s.length()) {
+            return false;
+        }
+
+        if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+            i++;
+        }
+
+        if (i == s.length()) {
+            return false;
+        }
+        boolean containsNumber = false;
+        boolean containsAfterENumber = false;
+        if (s.contains(".")) {
+            int j = s.indexOf(".");
+            while (i < j & isD(s.charAt(i))) {
+                i++;
+                containsNumber = true;
+            }
+            if (i != j) {
+                return false;
+            }
+            if (s.contains("e")) {
+                i++;
+                int k = s.indexOf("e");
+                while (i < k && isD(s.charAt(i))) {
+                    i++;
+                    containsNumber = true;
+                }
+                if (i != k || !containsNumber) {
+                    return false;
+                }
+                i++;
+                if (i == s.length()) {
+                    return false;
+                }
+                if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+                    i++;
+                }
+                while (i < s.length() && isD(s.charAt(i))) {
+                    i++;
+                    containsAfterENumber = true;
+                }
+                return s.length() == i && containsAfterENumber;
+            } else {
+                i++;
+                while (i < s.length() && isD(s.charAt(i))) {
+                    i++;
+                    containsNumber = true;
+                }
+                return i == s.length() && containsNumber;
+            }
+        } else {
+            if (s.contains("e")) {
+                int k = s.indexOf("e");
+                while (i < k && isD(s.charAt(i))) {
+                    i++;
+                    containsNumber = true;
+                }
+                if (i != k || !containsNumber) {
+                    return false;
+                }
+                i++;
+                if (i == s.length()) {
+                    return false;
+                }
+                if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+                    i++;
+                }
+                while (i < s.length() && isD(s.charAt(i))) {
+                    i++;
+                    containsAfterENumber = true;
+                }
+                return s.length() == i && containsAfterENumber;
+            } else {
+                while (i < s.length() && isD(s.charAt(i))) {
+                    i++;
+                    containsNumber = true;
+                }
+                return i == s.length() && containsNumber;
+            }
+        }
+
+
+    }
+
+    private boolean isD(char ch) {
+        return ch >= '0' && ch <= '9';
+    }
+}
