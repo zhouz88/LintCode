@@ -43,10 +43,17 @@ class Solution {
 //method 2
 class Solution {
     public int closestValue(TreeNode root, double target) {
-         int v1 = root.val;
-        TreeNode c =  target<v1? root.left: root.right;
-        if(c == null) return v1;
-        int v2 = closestValue(c,target);
-        return Math.abs(target - v1) < Math.abs(target - v2)? v1 : v2;       
+        int val = root.val;
+        TreeNode n = null;
+        if (root.val > target) {
+            n = root.left;
+        } else {
+            n = root.right;
+        }
+        if (n == null) {
+            return root;
+        }
+        int tar = closestValue(n, target);
+        return Math.abs(tar - target) > Math.abs(val - target) ? val : tar;
     }
 }
