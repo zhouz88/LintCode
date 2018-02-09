@@ -78,3 +78,90 @@ public class Codec {
 // Your Codec object will be instantiated and called as such:
 // Codec codec = new Codec();
 // codec.deserialize(codec.serialize(root));
+
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        //corner case
+        if (root == null) {
+            return "";
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        StringBuilder sb = new StringBuilder();
+        stack.add(root);
+        while (!stack.isEmpty()) {
+            TreeNode k = stack.pop();
+            if (k == null) {
+                sb.append("#,");
+                continue;
+            } else {
+                sb.append(k.val + ",");
+            }
+
+            if (k.right != null) {
+                stack.add(k.right);
+            } else {
+                stack.add(null);
+            }
+
+            if (k.left != null) {
+                stack.add(k.left);
+            } else {
+                stack.add(null);
+            }
+        }
+
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.equals("")) {
+            return null;
+        }
+        String[] s = data.split(",");
+        Map<TreeNode, Boolean> map = new HashMap<>();
+        Stack<TreeNode> stack = new Stack<>();
+        System.out.println(data);
+        TreeNode root = null;
+        for (int i = 0; i < s.length; i++) {
+            if (!s[i].equals("#")) {
+                TreeNode node = new TreeNode(Integer.parseInt(s[i]));
+                if (stack.isEmpty()) {
+                    root = node;
+                    stack.add(node);
+                } else {
+                    if (!map.containsKey(stack.peek())) {
+                        map.put(stack.peek(), true);
+                        stack.peek().left = node;
+                        stack.add(node);
+                    } else {
+                        stack.peek().right = node;
+                        stack.add(node);
+                    }
+                }
+            } else {
+                if (!map.containsKey(stack.peek())) {
+                    map.put(stack.peek(), false);
+                } else {
+                    stack.pop(); 
+                    while (!stack.isEmpty() && map.containsKey(stack.peek()) && stack.peek().right != null) {
+                        stack.pop();
+                    }
+                }
+            }
+        }
+        
+        return root;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.deserialize(codec.serialize(root));
