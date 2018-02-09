@@ -1,5 +1,5 @@
 274. H-Index
-
+/*
 //274. H-Index
 DescriptionHintsSubmissionsDiscussSolution
 DiscussPick One
@@ -15,7 +15,9 @@ Credits:
 Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
     
     ///
-class Solution {
+    
+    */
+cclass Solution {
     public int hIndex(int[] citations) {
         int l = 0, r = citations.length;
         while (l <= r) {
