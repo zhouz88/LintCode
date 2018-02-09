@@ -1,6 +1,7 @@
 class TicTacToe {
     /*
     348. Design Tic-Tac-Toe
+    //这道题以上为高频400题
 DescriptionHintsSubmissionsDiscussSolution
 DiscussPick One
 Design a Tic-tac-toe game that is played between two players on a n x n grid.
