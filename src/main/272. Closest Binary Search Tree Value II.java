@@ -25,6 +25,8 @@ Assume that the BST is balanced, could you solve it in less than O(n) runtime (w
 
  * }
  */
+
+//6ms
 class Solution {
     public List<Integer> closestKValues(TreeNode root, double target, int k) {
         
@@ -55,5 +57,47 @@ class Solution {
     
         return ret.subList(l, l + k);
         
+    }
+}
+
+//7ms
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+
+        LinkedList<Integer> ret = new LinkedList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode p = root;
+        while (p != null || !stack.isEmpty()) {
+            if (p != null) {
+                stack.add(p);
+                p = p.left;
+            } else {
+                p = stack.pop();
+                if (ret.size() < k) {
+                    ret.add(p.val);//wrong 1 p not root!!!!!!!!!!!!!!!!
+                } else {
+                    if (2 * target > (ret.get(0) + p.val)) {
+                        ret.removeFirst();
+                        ret.addLast(p.val);//wrong 1 p not root!!!!!!!!!!!!!!!!
+                    }
+                }
+                p = p.right;
+            }
+        }
+        return ret;
     }
 }
