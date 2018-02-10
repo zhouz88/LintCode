@@ -4,7 +4,7 @@ import java.util.Map.Entry;
 class Solution {
     public int leastInterval(char[] tasks, int n) {
         if (n == 0) {
-            return tasks.length;
+            return tasks.length; //wrong1
         }
         PriorityQueue<Node> pq = new PriorityQueue<Node>();
         HashMap<Character, Integer> map = new HashMap<>();
