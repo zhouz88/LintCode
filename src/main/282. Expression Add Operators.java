@@ -10,13 +10,6 @@ class Solution {
 
     private void dfs(Set<String> list, long sum, long pre, String num, int start, int target, char sign, String s) {
         //System.out.println(s + " : " + sum + " : " + pre);
-        if (start == num.length()) {
-            sum += pre;
-            if (sum == (long)target) {
-                list.add(s.substring(1));
-            }
-            return;//wrong 1
-        }
         int f = start;
         long tmp = 0;
         for (int i = f; i < num.length(); i++) {
