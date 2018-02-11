@@ -12,7 +12,7 @@ class Solution {
         stack.add(-1);
         int max = -1;
         
-        for (int i = 0; i < heights.length;  i++) {
+        for (int i = 0; i < heights.length;  i++) {//small value determines the result
             while (stack.peek() != - 1 && heights[stack.peek()] > heights[i]) {
                 int h = stack.pop() ;
                 max = Math.max(max, (i - 1 - stack.peek())*heights[h]);
