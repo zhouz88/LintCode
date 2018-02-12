@@ -12,12 +12,12 @@ class NumArray {
     }
     
     public void init(int i, int val) {
-		i++;
-		while (i < Bit.length) {
-			Bit[i] += val;
-			i += (i & -i);
-		}
+	i++;
+	while (i < Bit.length) {
+	    Bit[i] += val;
+	    i += (i & -i);
 	}
+   }
 
     public void update(int i, int val) {
         updateTree(i, val - nums[i]);
