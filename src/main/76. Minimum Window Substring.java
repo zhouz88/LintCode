@@ -14,20 +14,18 @@ class Solution {
         
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
-            if (window[ch] < tMap[ch]) {
+            if (window[ch]++ < tMap[ch]) {
                 cnt++;
             } 
-            window[ch]++;
             while (cnt == t.length() && j <= i) {
                 if (i - j + 1 < max) {
                     ret = s.substring(j, i + 1);
                     max = i - j + 1;
                 }
                 char tmp = s.charAt(j);
-                if (window[tmp] == tMap[tmp]) {
+                if (window[tmp]-- == tMap[tmp]) {
                     cnt--;
                 }
-                window[tmp]--;
                 j++;
             }
         }
