@@ -22,7 +22,7 @@ class Solution {
             strs = s.split("e");
             return check(strs[0], 0) && check(strs[1], 1);
         } else {
-            return check(s, 0);a
+            return check(s, 0);
         }
     }
 
