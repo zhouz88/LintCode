@@ -27,7 +27,7 @@ class Solution {
                 }
             }
         } else {
-            board[x][y] = (char)(cnt + '0');
+            board[x][y] = (char)(cnt + '0'); //wrong 1 should not search if is number;
         }
     }
 
