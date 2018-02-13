@@ -56,36 +56,13 @@ class Solution {
                 return false;
             }
             strs = s.split("e");
-            return checkLeft(strs[0]) && checkRight(strs[1]);
+            return check(strs[0], 0) && check(strs[1], 1);
         } else {
-            return checkLeft(s);
+            return check(s, 0);a
         }
-    }
-    
-    private boolean checkLeft(String s) {
-        if (s.length() == 0) {
-            return false;
-        }
-        int i = 0;
-        if (s.startsWith("+")||s.startsWith("-")) {
-            i++;
-        }
-        boolean flag = false;
-        for (; i < s.length(); i++) {
-            if (s.charAt(i) == '.') {
-                continue;
-            } else {
-                if (Character.isDigit(s.charAt(i))) {
-                    flag = true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return flag;
     }
 
-    private boolean checkRight(String s) {
+    private boolean check(String s, int leftOrRight) {
         if (s.length() == 0) {
             return false;
         }
@@ -96,6 +73,7 @@ class Solution {
         boolean flag = false;
         for (; i < s.length(); i++) {
             if (s.charAt(i) == '.') {
+                if (leftOrRight == 0) continue; 
                 return false;
             } else {
                 if (Character.isDigit(s.charAt(i))) {
