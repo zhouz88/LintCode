@@ -37,3 +37,29 @@ class TwoSum {
  * obj.add(number);
  * boolean param_2 = obj.find(value);
  */
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        // Arrays.sort(nums);求得是index!!!!!!!
+        // int l = 0, r = nums.length - 1;
+        // while (l < r) {
+        //     if (nums[l] + nums[r] == target) {
+        //         return new int[]{l , r};
+        //     } else if (nums[l] + nums[r] > target) {
+        //         r--;
+        //     } else {
+        //         l++;
+        //     }
+        // }
+        //                return new int[2];
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(target - nums[i])) {
+                return new int[]{map.get(target - nums[i]), i};
+            } else {
+                map.put(nums[i], i);
+            }
+        }
+        return new int[2];
+    }
+}
