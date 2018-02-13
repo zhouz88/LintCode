@@ -30,7 +30,7 @@ class Solution {
         boolean flag = false;
         for (int i = 0; i < maxChoosableInteger; i++) {
             if ((state & (1 << i)) == 0) continue;
-            int newState = state - (1 << i);
+            int newState = state ^ (1 << i);
             if (!dfs(newState, desiredTotal, maxChoosableInteger, sum + (i + 1), map)) { //wrong 1 nodt flag || ....cost time
                flag = true;
                break;
