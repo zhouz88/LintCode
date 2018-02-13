@@ -36,99 +36,75 @@ class Solution {
         return numberSeen && numberAfterESeen;
     }
 }
+//my easy understanding 
 
-//
+
+
 class Solution {
     public boolean isNumber(String s) {
         s = s.trim();
-        int i = 0;
-        if (i == s.length()) {
+        if (s.indexOf('.') != s.lastIndexOf('.')) {
             return false;
         }
-
-        if (s.charAt(i) == '+' || s.charAt(i) == '-') {
-            i++;
-        }
-
-        if (i == s.length()) {
+        if (s.indexOf('e') != s.lastIndexOf('e')) {
             return false;
         }
-        boolean containsNumber = false;
-        boolean containsAfterENumber = false;
-        if (s.contains(".")) {
-            int j = s.indexOf(".");
-            while (i < j & isD(s.charAt(i))) {
-                i++;
-                containsNumber = true;
-            }
-            if (i != j) {
+        
+        String[] strs;
+        if (s.contains("e")) {
+            if (s.endsWith("e")) {
                 return false;
             }
-            if (s.contains("e")) {
-                i++;
-                int k = s.indexOf("e");
-                while (i < k && isD(s.charAt(i))) {
-                    i++;
-                    containsNumber = true;
-                }
-                if (i != k || !containsNumber) {
-                    return false;
-                }
-                i++;
-                if (i == s.length()) {
-                    return false;
-                }
-                if (s.charAt(i) == '+' || s.charAt(i) == '-') {
-                    i++;
-                }
-                while (i < s.length() && isD(s.charAt(i))) {
-                    i++;
-                    containsAfterENumber = true;
-                }
-                return s.length() == i && containsAfterENumber;
-            } else {
-                i++;
-                while (i < s.length() && isD(s.charAt(i))) {
-                    i++;
-                    containsNumber = true;
-                }
-                return i == s.length() && containsNumber;
-            }
+            strs = s.split("e");
+            return checkLeft(strs[0]) && checkRight(strs[1]);
         } else {
-            if (s.contains("e")) {
-                int k = s.indexOf("e");
-                while (i < k && isD(s.charAt(i))) {
-                    i++;
-                    containsNumber = true;
-                }
-                if (i != k || !containsNumber) {
-                    return false;
-                }
-                i++;
-                if (i == s.length()) {
-                    return false;
-                }
-                if (s.charAt(i) == '+' || s.charAt(i) == '-') {
-                    i++;
-                }
-                while (i < s.length() && isD(s.charAt(i))) {
-                    i++;
-                    containsAfterENumber = true;
-                }
-                return s.length() == i && containsAfterENumber;
+            return checkLeft(s);
+        }
+    }
+    
+    private boolean checkLeft(String s) {
+        if (s.length() == 0) {
+            return false;
+        }
+        int i = 0;
+        if (s.startsWith("+")||s.startsWith("-")) {
+            i++;
+        }
+        boolean flag = false;
+        for (; i < s.length(); i++) {
+            if (s.charAt(i) == '.') {
+                continue;
             } else {
-                while (i < s.length() && isD(s.charAt(i))) {
-                    i++;
-                    containsNumber = true;
+                if (Character.isDigit(s.charAt(i))) {
+                    flag = true;
+                } else {
+                    return false;
                 }
-                return i == s.length() && containsNumber;
             }
         }
-
-
+        return flag;
     }
 
-    private boolean isD(char ch) {
-        return ch >= '0' && ch <= '9';
+    private boolean checkRight(String s) {
+        if (s.length() == 0) {
+            return false;
+        }
+        int i = 0;
+        if (s.startsWith("+") || s.startsWith("-")) {
+            i++;
+        }
+        boolean flag = false;
+        for (; i < s.length(); i++) {
+            if (s.charAt(i) == '.') {
+                return false;
+            } else {
+                if (Character.isDigit(s.charAt(i))) {
+                    flag = true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return flag;
     }
 }
