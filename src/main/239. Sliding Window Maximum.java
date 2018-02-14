@@ -15,8 +15,8 @@ class Solution {
         int[] ret = new int[len - k + 1];
         int idx = 0;
         for (i = 0; i < len; i++) {
-            while (!dq.isEmpty() && nums[dq.peekLast()] < nums[i]) {
-                dq.pollLast(); // the latter big one decides the max.
+            while (!dq.isEmpty() && nums[dq.peekLast()] <= nums[i]) {
+                dq.pollLast(); // 进入 nums[i]的作用域后，之前小于这个数的都得滚！the latter big one decides the max.
             }
             dq.addLast(i);
             if (i - k + 1 >= 0) {
