@@ -8,7 +8,7 @@ class Solution {
         if (n == 0) {
             return ret;
         }
-        update(ret, n, new char[2*n], 0, 0); //char 数组默认'\u0000'就和 int[] 默认 0一样
+        update(ret, n, new char[2*n], 0, 0); //char 数组默认长度为1 '\u0000'就和 int[] 默认 0一样
         
         return ret;
     }
