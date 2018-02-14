@@ -15,9 +15,6 @@ class Solution {
         if (cnt != 7) {
             return "Neither";
         }
-        if (IP.contains("::")) {
-            return "Neither";
-        }
         String[] s = IP.split(":");
         if (s.length != 8) {
             return "Neither";
@@ -27,9 +24,6 @@ class Solution {
             if (k.length() > 4 || k.length() == 0) {
                 return "Neither";
             }
-            // if (k.startsWith("00")) {
-            //     return "Neither";
-            // }
             for (char ch:k.toCharArray()) {
                 if (n.indexOf(ch+"") == -1) {
                     return "Neither";
