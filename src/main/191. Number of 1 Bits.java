@@ -15,9 +15,11 @@ public class Solution {
     public int hammingWeight(int n) {
         int cnt = 0;
         while (n != 0) {
-            n = n - (-n&n); //-k&k求有变数第一个1的值
+            n = n ^ (-n&n); //-k&k求有变数第一个1的值
             cnt++;
         }
         return cnt;
     }
 }
+
+
