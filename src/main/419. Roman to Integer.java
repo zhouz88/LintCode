@@ -70,4 +70,21 @@ public class Solution {
     }
 }
 
-//
+//Integer to Roman
+
+public class Solution {
+    /**
+     * @param n The integer
+     * @return Roman representation
+     */
+    public String intToRoman(int n) {
+        // Write your code here
+        //M 1000 D 500 C 100 L 50 X 10 V 5 I 1
+        String[] qian = {"", "M", "MM", "MMM" };
+        String[] bai = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM" };
+        String[] shi = {"", "X", "XX", "XXX", "XL", "L", "LX" , "LXX", "LXXX", "XC"};
+        String[] gewei = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+        return qian[n/1000] + bai[(n/100)%10] + shi[(n/10)%10] + gewei[n%10];
+    }
+}
+
