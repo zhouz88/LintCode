@@ -1,4 +1,6 @@
 class Solution {
+    
+    //https://stackoverflow.com/questions/1294720/whats-the-difference-between-backtracking-and-depth-first-search
     public boolean exist(char[][] board, String word) {
         //corner case
          if (board == null || board.length == 0 || board[0].length == 0 || word == null) {
