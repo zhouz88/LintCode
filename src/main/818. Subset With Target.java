@@ -56,3 +56,36 @@ public class Solution {
         System.out.println(new Solution().subsetWithTarget(new int[]{1,2,3,4,5}, 5));
     }
 }
+
+//standard solution
+
+import java.lang.reflect.Array;
+import java.util.*;
+
+public class Solution {
+    /**
+     * @param nums: the array
+     * @param target: the target
+     * @return: the number of subsets which meet the following conditions
+     */
+    public long subsetWithTarget(int[] nums, int target) {
+        // Write you code here
+        Arrays.sort(nums);
+        long ans = 0;
+        for(int i = 0; i < nums.length; i++) {
+            int j = i;
+            while(j + 1 < nums.length && nums[i] + nums[j + 1] < target) {
+                j++;
+            }
+            if(nums[i] + nums[j] < target) {
+                ans += ((long)1<<(j - i)) ;
+            }
+            
+        }
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Solution().subsetWithTarget(new int[]{1,2,3,4,5}, 5));
+    }
+}
