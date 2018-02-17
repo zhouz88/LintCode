@@ -31,7 +31,7 @@ class Solution {
 
 import java.util.Arrays;
 
-class Solution { n + 1 个边 n个点 不可能有最小生成树，一定有环！// minimum spanning tree must not exist!
+class Solution { n + 1 个边 less than n个点 不可能有最小生成树，一定有环！// minimum spanning tree must not exist!
     public int findDuplicate(int[] nums) {
         int slow = nums[0];
         int fast = nums[0];
