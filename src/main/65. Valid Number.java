@@ -14,13 +14,9 @@ class Solution {
             return false;
         }
         
-        String[] strs;
         if (s.contains("e")) {
-            if (s.endsWith("e")) {
-                return false;
-            }
-            strs = s.split("e");
-            return check(strs[0], 0) && check(strs[1], 1);
+            int idx = s.indexOf("e");
+            return check(s.substring(0, idx), 0) && check(s.substring(idx + 1), 1);
         } else {
             return check(s, 0);
         }
