@@ -17,7 +17,7 @@ class Solution {
             }
         }
         
-        for (i = 1; i < days[0].length; i++) {
+        for (i = 1; i < days[0].length; i++) {//wrong 3 days[0]care  !!!
             int[] newDp = new int[n];
             Arrays.fill(newDp, -1);
             for (j = 0; j < n ; j++) {
@@ -34,9 +34,7 @@ class Solution {
         int ans = -1;
         
         for (i = 0; i < n; i++) {
-            if (dp[i] != Integer.MAX_VALUE) {
-                ans = Math.max(ans, dp[i]);
-            }
+            ans = Math.max(ans, dp[i]);
         }
         
         return ans;
