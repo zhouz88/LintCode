@@ -8,8 +8,7 @@ class Solution {
         dp[1] = 1L;
 
         for (int i = 2; i <= 14; i++) {
-            dp[i] = 10*dp[i - 1] + (int)Math.pow(10, i - 1);
-            // System.out.println(totalOnesOflenth[i - 1]);
+            dp[i] = 10*dp[i - 1] + (int)Math.pow(10, i - 1);//小于等于0 到 1000(i个0)有几个1；
         }
 
         char[] t = (""+n).toCharArray();
@@ -20,7 +19,6 @@ class Solution {
             int length = len - i - 1;
 
             if (cur == 0) {
-                cnt += preones * cur * (int)Math.pow(10, length);
                 continue;
             } else if (cur == 1) {
                 int tmp = cur * (int)dp[length] + 1;
@@ -30,7 +28,6 @@ class Solution {
                 int tmp = (cur) * (int)dp[length] + (int) Math.pow(10, length);
                 cnt += tmp + preones * cur * (int)Math.pow(10, length);
             }
-
         }
 
         return cnt;
