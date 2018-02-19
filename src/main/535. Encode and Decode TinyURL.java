@@ -42,7 +42,7 @@ public class Codec {
         return sb.toString();
     }
 
-    private long numberToCode(String s) {
+    private long codeToNumber(String s) {
         String k = s.replace("http://tinyurl.com/", "");
         long tmp = 0;
         for (int i = 0; i < k.length(); i++) {
@@ -53,7 +53,7 @@ public class Codec {
 
     // Decodes a shortened URL to its original URL.
     public String decode(String shortUrl) {
-        long res = numberToCode(shortUrl);
+        long res = codeToNumber(shortUrl);
         return idLongUrlMap.get(res);
     }
 }
