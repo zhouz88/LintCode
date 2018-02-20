@@ -3,28 +3,21 @@ class Solution {
         if (costs == null ||costs.length == 0 || costs[0].length == 0) {
             return 0;
         }
-        
+
         int n = costs.length, k = costs[0].length;
         int[] dp = costs[0];
-        int minIdx = 0;
-        int secondIdx = 0;
-
-        for (int i = 1; i < k; i++) {
-            if (dp[i] < dp[minIdx]) {
-                minIdx = i;
-            }
-        }
-
-        int min = Integer.MAX_VALUE;
-
+        
+        int minIdx = 0, secondIdx = -1, min1 = Integer.MAX_VALUE, min2 = Integer.MAX_VALUE;
+        
         for (int i = 0; i < k; i++) {
-            if (minIdx == i) {
-                continue;
-            } else {
-                if (dp[i] < min) {
-                    min = dp[i];
-                    secondIdx = i;
-                }
+            if (dp[i] < min1) {
+                min2 = min1;
+                secondIdx = minIdx;
+                min1 = dp[i];
+                minIdx = i;
+            } else if (dp[i] <= min2) {
+                min2 = dp[i];
+                secondIdx = i;
             }
         }
         
@@ -32,7 +25,8 @@ class Solution {
             int[] newDp = new int[k];
             int newMinIdx = -1;
             int newSecondMinIdx = -1;
-            int minValue = Integer.MAX_VALUE;
+            int minValue1 = Integer.MAX_VALUE;
+            int minValue2 = Integer.MAX_VALUE;
 
             for (int j = 0; j < k; j++) {
                 if (j != minIdx) {
@@ -40,22 +34,16 @@ class Solution {
                 } else {
                     newDp[j] = costs[i][j] + dp[secondIdx];
                 }
-                if (newDp[j] < minValue) {
+                
+                if (newDp[j] < minValue1) {
+                    newSecondMinIdx = newMinIdx;
+                    minValue2 = minValue1;
                     newMinIdx = j;
-                    minValue = newDp[j];
-                }
-            }
-
-            minValue = Integer.MAX_VALUE;
-
-            for (int j = 0; j < k; j++) {
-                if (newMinIdx == j) {
-                    continue;
-                } else {
-                    if (newDp[j] < minValue) {
-                        minValue = newDp[j];
-                        newSecondMinIdx = j;
-                    }
+                    minValue1 = newDp[j];
+                
+                } else if (newDp[j] <= minValue2) {
+                    newSecondMinIdx = j;
+                    minValue2 = newDp[j];
                 }
             }
 
