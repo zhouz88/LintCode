@@ -1,27 +1,30 @@
-public class Solution {
-    /*
-     * @param source: source string to be scanned.
-     * @param target: target string containing the sequence of characters to match
-     * @return: a index to the first occurrence of target in source, or -1  if target is not part of source.
-     */
-    public int strStr(String source, String target) {
-        // write your code here
-        if (source == null || target == null 
-              || source.length() < target.length()) {
+class Solution {
+    public int strStr(String haystack, String needle) {
+        if (haystack == null || needle == null) {
             return -1;
-        } 
+        }
         
-        if ("".equals(target)) {
+        if (needle.length() == 0) {
             return 0;
         }
         
-        for (int i = 0; i <= source.length() - target.length(); i++) {
-            String tmp = source.substring(i, target.length() + i);
-            if (tmp.equals(target)) {
-                return i;
+        for (int i = 0; i <= haystack.length() - needle.length() ; i++) {
+            int l = i;
+            int r = 0;
+            
+            while (true) {
+                if (haystack.charAt(l) == needle.charAt(r)) {
+                    l++;
+                    r++;
+                    if (r == needle.length()) {
+                        return i;
+                    }
+                } else {
+                    break;
+                }
             }
         }
-        
+                        
         return -1;
     }
 }
