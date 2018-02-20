@@ -37,3 +37,28 @@ Return 2. Because there are two triplets which sums are less than 2:
 Follow up:
 Could you solve it in O(n2) runtime?
 */
+
+import java.util.Arrays;
+
+class Solution {
+    public int triangleNumber(int[] nums) {
+        //2sum smaller than 0;
+        Arrays.sort(nums);
+        int cnt = 0;
+        for (int i = 2; i < nums.length; i++) {
+            int l = 0;
+            int r = i - 1;
+            while (l < r) {
+                if (nums[l] + nums[r] > nums[i]) {
+                    cnt += r - l;
+                    r--;
+                } else {
+                    l++;
+                }
+            }
+        }
+        return cnt;
+    }
+}
+
+611. Valid Triangle Number
