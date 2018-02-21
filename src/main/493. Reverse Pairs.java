@@ -79,7 +79,6 @@ class Solution {
 }
 
 //two pointers 
-
 class Solution {
     private int count = 0;
 
@@ -103,13 +102,17 @@ class Solution {
             Node[] array = new Node[end - start + 1];
             int idx = 0;
             int l = start, r = mid + 1;
-            int j = mid + 1;
             
-            for (int i = start; i <= mid; i++) {
+            int j = mid + 1;
+            int i = start;
+            
+            while (i <= mid && j <= end) {
                 long g = 2 * nodes[j].val;
                 if (nodes[i].val > g) {
                     count += mid - i + 1;
                     j++;
+                } else {
+                    i++;
                 }
             }
 
@@ -129,12 +132,12 @@ class Solution {
                 array[idx++] = nodes[r++];
             }
 
-            for (int i = start; i <= end; i++) {
+            for (i = start; i <= end; i++) {
                 nodes[i] = array[i - start];
             }
         }
     }
-
+    
     private static class Node {
         long val;
         int id;
