@@ -1,31 +1,33 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Solution{//11ms
     public List<String> findRepeatedDnaSequences(String s){
-        List<String> res = new ArrayList<>();
-        if (s == null || s.length() < 10) {
-            return res;
-        }
-        //对字母进行编码
-        char[] map = new char[256];
-        map['A'] = 0;
-        map['C'] = 1;
-        map['G'] = 2;
-        map['T'] = 3;
-        int mask = 0xfffff;//20bit,10个字母，每个字母占2bit
+        List<String> ret = new ArrayList<>();
+        int mask = 0xfffff;
+        
+        byte[] map = new byte[1 << 20];
+        int[] f = new int[256];
+        f['A'] = 0b00;
+        f['T'] = 0b01;
+        f['C'] = 0b10;
+        f['G'] = 0b11;
         int val = 0;
-        char[] schar = s.toCharArray();
-        for (int i = 0; i < 9 ;i ++ ) {//对前9位进行编码
-            val = (val << 2) | (map[schar[i]] & 3);
-        }
-        byte[] bytes = new byte[1 << 20];
-        for (int i = 9;i < schar.length ;i ++ ) {
-            val = ((val << 2) & mask) | ((map[schar[i]]) & 3);//编码
-            if (bytes[val] == 1) {
-                res.add(String.valueOf(schar,i - 9,10));
+        
+        for (int i = 0; i < s.length(); i++) {
+            val = (mask & (val << 2) )| f[s.charAt(i)];
+            if (i >= 9) {
+                if (map[val] == 1) {
+                    ret.add(s.substring(i - 9, i + 1));
+                    map[val] = 2;
+                } else if (map[val] == 0) {
+                    map[val]++;
+                } else {
+                    continue;
+                }
             }
-            if (bytes[val] < 2) {
-                bytes[val] ++;
-            }
-        }
-        return res;
+        } 
+        
+        return ret;
     }
 }
