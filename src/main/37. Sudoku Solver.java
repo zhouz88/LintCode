@@ -54,7 +54,7 @@ class Solution {
                             }
                         }
                     }
-                    return false;
+                    return false;//如果 没有一个能够更改 就是错的；说明改错了
                 }
             }
         }
