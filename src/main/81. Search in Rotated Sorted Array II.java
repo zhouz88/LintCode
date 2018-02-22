@@ -27,19 +27,15 @@ class Solution {
                 } else {
                     l = mid + 1;
                 }
-            } 
-            
-            if (nums[mid] < nums[nums.length - 1]) {
+            } else if (nums[mid] < nums[nums.length - 1]) {
                 if (nums[mid] < target && target <= nums[nums.length - 1]) {
                     l = mid + 1;
                 } else {
                     r = mid - 1;
                 }
-            }
-            
-            if (nums[mid] == nums[l]) {
+            } else if (nums[mid] == nums[l]) {
                 l++;
-            } else if (nums[mid] == nums[r]){
+            } else if (nums[mid] == nums[r]) {
                 r--;
             }
             
