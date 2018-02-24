@@ -29,7 +29,7 @@ class Solution {
     private int[][] DIRECTIONS = {{1, 0},{-1, 0},{0, 1},{0, -1}};
 
     private void update(char[][] board, int i, int j, T root, List<String> ret) {
-        //base
+        //base to avoid "" in the original list
         if (root.isWord) {
             ret.add(root.word);
             root.isWord = false;
