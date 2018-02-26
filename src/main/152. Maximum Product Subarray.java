@@ -22,3 +22,23 @@ class Solution {
         return max;
     }
 }
+
+//
+class Solution {
+    public int maxProduct(int[] nums) {
+        if (nums== null || nums.length == 0) {
+            return 0;
+        }
+        int len = nums.length;
+        int max = nums[0];
+        int curMax = max, curMin = max;
+        for (int i = 1; i < len; i++) {
+            int lo = curMin * nums[i];
+            int hi = curMax * nums[i];
+            curMax = Math.max(lo, Math.max(hi, nums[i]));
+            curMin = Math.min(lo, Math.min(hi, nums[i]));
+            max = Math.max(max, curMax);
+        }
+        return max;
+    }
+}
