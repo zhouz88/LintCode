@@ -1,4 +1,4 @@
-471. Encode String with Shortest Length
+/*471. Encode String with Shortest Length
 DescriptionHintsSubmissionsDiscussSolution
 Pick One
 Given a non-empty string, encode the string such that its encoded length is the shortest.
@@ -34,6 +34,7 @@ Example 5:
 Input: "abbbabbbcabbbabbbc"
 Output: "2[2[abbb]c]"
 Explanation: "abbbabbbc" occurs twice, but "abbbabbbc" can also be encoded to "2[abbb]c", so one answer can be "2[2[abbb]c]".
+*/
 public class Solution {
     public String encode(String s) {
         int n = s.length();
