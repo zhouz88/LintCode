@@ -7,7 +7,7 @@ class Solution {
             return 1.0 * findKth(nums1, nums2, (m + n + 1)/2, m, n);
         }
     }
-    
+
     private int findKth(int[] nums1, int[] nums2, int k, int m, int n) {
         int l = 0;
         int r = 0;
@@ -21,10 +21,14 @@ class Solution {
             if (k == 1) {
                 return Math.min(nums1[l], nums2[r]);
             }
-            int A = l + k/2 - 1 < nums1.length ? nums1[l + k/2 - 1] : Integer.MAX_VALUE;
-            int B = r + k/2 - 1 < nums2.length ? nums2[r + k/2 - 1] : Integer.MAX_VALUE;
             
-            if (A < B) {
+            if (l + k/2 - 1 < m && r + k/2 - 1 < n) {
+                if (nums1[l + k/2 - 1] < nums2[r + k/2 - 1]) {
+                    l = l + k/2;
+                } else {
+                    r = r + k/2;
+                }
+            } else if (l + k/2 - 1 < m) {
                 l = l + k/2;
             } else {
                 r = r + k/2;
