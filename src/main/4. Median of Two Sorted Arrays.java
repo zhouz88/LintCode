@@ -12,10 +12,10 @@ class Solution {
         int l = 0;
         int r = 0;
         while (true) {
-            if (l >= m) {
+            if (l == m) {
                 return nums2[r + k - 1];
             }
-            if (r >= n) {
+            if (r == n) {
                 return nums1[l + k - 1];
             }
             if (k == 1) {
