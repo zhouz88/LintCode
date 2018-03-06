@@ -71,3 +71,33 @@ class Solution {
         }
     }
 }
+
+//
+class Solution {
+    public void nextPermutation(int[] a) {
+        int i, j, tmp;
+
+        for (i = a.length - 1; i >= 1 && a[i - 1] >= a[i]; i--);
+
+        if (i == 0) {
+            for (i = 0, j = a.length - 1; i < j; i++, j--) {
+                tmp = a[i];
+                a[i] = a[j];
+                a[j] = tmp;
+            }
+            return;
+        }
+
+        for (j = a.length - 1; a[j] <= a[i - 1]; j--);
+
+        tmp = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = tmp;
+
+        for (j = a.length - 1; i < j; i++, j--) {
+            tmp = a[i];
+            a[i] = a[j];
+            a[j] = tmp;
+        }
+    }
+}
