@@ -1,81 +1,83 @@
 import java.util.HashMap;
+import java.util.Map;
 
 class LRUCache {
-    
-    HashMap<Integer, ListNode> map;
-    ListNode head;
-    ListNode tail;
-    int cap;
+    private Map<Integer, ListNode> map;
+    private int cap;
+    private ListNode head;
+    private ListNode tail;
     
     public LRUCache(int capacity) {
-       this.cap = capacity;
-       this.head = new ListNode(-1, 0);
-       this.tail = new ListNode(-1, 0);
-       map = new HashMap<>();
-       head.next = tail;
-       tail.pre = head;
+        this.map = new HashMap<>();
+        this.cap = capacity;
+        head = new ListNode(-1, -1);
+        tail = new ListNode(-1, -1);
+        head.next = tail;
+        tail.pre = head;
     }
 
     public int get(int key) {
+        if (cap == 0) {
+            return -1;
+        }
+        
         if (!map.containsKey(key)) {
             return -1;
         }
-        ListNode tmp = remove(key, map);
-        add(tmp, map);
+        ListNode tmp = map.get(key);
+        remove(tmp);
+        add(tmp);
         return tmp.val;
+    }
+    
+    private void remove(ListNode node) {
+        ListNode pre = node.pre;
+        ListNode next = node.next;
+        pre.next = next;
+        next.pre = pre;
+        map.remove(node.key);
+    }
+
+    private void add(ListNode node) {
+        ListNode lastNode = tail.pre;
+        lastNode.next = node;
+        node.pre = lastNode;
+        tail.pre = node;
+        node.next = tail;
+        map.put(node.key, node);
     }
 
     public void put(int key, int value) {
         if (cap == 0) {
-            return;
+            return ;
         }
         
         if (map.containsKey(key)) {
-            get(key);
-            map.get(key).val = value;
+            ListNode tmp = map.get(key);
+            tmp.val = value;
+            remove(tmp);
+            add(tmp);
         } else {
             if (map.size() < cap) {
-                add(new ListNode(key, value), map);
+                ListNode tmp = new ListNode(key, value);
+                add(tmp);
             } else {
                 ListNode tmp = head.next;
-                tmp = remove(tmp.key, map);
-                tmp.key = key;
-                tmp.val = value;
-                add(tmp, map);
+                remove(tmp);
+                add(new ListNode(key, value));
             }
         }
     }
     
-    private ListNode remove(int key, HashMap<Integer, ListNode> map) {
-        ListNode tmp = map.get(key);
-        map.remove(key);
-        ListNode pre = tmp.pre;
-        ListNode next = tmp.next;
-        pre.next = next;
-        next.pre = pre;
-        tmp.next = null;
-        tmp.pre = null;
-        return tmp;
-    }
-    
-    private void add(ListNode tmp,  HashMap<Integer, ListNode> map) {
-        int key = tmp.key;
-        ListNode beforetail = tail.pre;
-        beforetail.next = tmp;
-        tmp.pre = beforetail;
-        tmp.next = tail;
-        tail.pre = tmp;
-        map.put(key , tmp);
-    }
-    
-    private static class ListNode{
+    private static class ListNode {
         int val;
         int key;
-        ListNode next, pre;
+        ListNode pre;
+        ListNode next;
 
-        public ListNode (int key, int val) {
-            this.val = val;
+        public ListNode (int key, int val){
             this.key = key;
+            this.val = val;
         }
     }
 }
