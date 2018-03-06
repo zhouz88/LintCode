@@ -1,66 +1,38 @@
-class Solution {
+]class Solution {
     public boolean isMatch(String s, String p) {
-        int m = s.length();
-        int n = p.length();
+        if (s == null || p == null) {
+            return false;
+        }
+        int m = s.length(), n = p.length();
         boolean[][] dp = new boolean[m + 1][n + 1];
+
         dp[0][0] = true;
 
-        //initial condition
-        int i, j;
-        for (j = 1; j + 1 <= n; j+=2) {
-            if (p.charAt(j - 1) != '*' && p.charAt(j) == '*') {
-                dp[0][j + 1]= true;
+        int i, j ;
+        for (j = 0; j + 1 < p.length(); j += 2) {
+            if (p.charAt(j) != '*' && p.charAt(j + 1) == '*') {
+                dp[0][j + 2] = true;
             } else {
                 break;
             }
         }
-        //get
-        for (i = 1; i <= m ; i++) {
-            for (j = 1; j <= n; j++) {
-                if (p.charAt(j - 1) == '*') {
-                    if (j > 1 && (p.charAt(j - 2) == '.' || p.charAt(j - 2) == s.charAt(i - 1))) {
-                        dp[i][j] = dp[i][j - 2] || dp[i - 1][j];
-                    } else if (j > 1) {
-                        dp[i][j] = dp[i][j - 2];
+
+        for (i = 0; i < m; i++) {
+            for (j = 0; j < n; j++) {
+                if (p.charAt(j) == '*') {
+                    if (j >= 1 && p.charAt(j - 1) == s.charAt(i) || p.charAt(j - 1) == '.') {
+                        dp[i + 1][j + 1] = dp[i + 1][j - 1] || dp[i][j + 1];
+                    } else if (j >= 1){
+                        dp[i + 1][j + 1] = dp[i + 1][j - 1];
                     }
-                } else if (p.charAt(j - 1) == '.' || p.charAt(j - 1) == s.charAt(i - 1)) {
-                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    if (s.charAt(i) == p.charAt(j) || p.charAt(j) == '.') {
+                        dp[i + 1][j + 1] = dp[i][j];
+                    }
                 }
             }
         }
-        return dp[m][n];
-    }
-}
 
-
-//good
-class Solution {
-    public boolean isMatch(String s, String p) {
-        int m = s.length();
-        int n = p.length();
-        boolean[][] dp = new boolean[m + 1][n + 1];
-        dp[0][0] = true;
-
-        //initial condition
-        int i, j;
-        for (j = 1; j <= n; j ++) {
-            dp[0][j] = (j >= 2 && dp[0][j - 2] && p.charAt(j - 1)=='*');
-        }
-        
-        //get
-        for (i = 1; i <= m ; i++) {
-            for (j = 1; j <= n; j++) {
-                if (p.charAt(j - 1) == '*') {
-                    if (j > 1 && (p.charAt(j - 2) == '.' || p.charAt(j - 2) == s.charAt(i - 1))) {
-                        dp[i][j] = dp[i][j - 2] || dp[i - 1][j];
-                    } else if (j > 1) {
-                        dp[i][j] = dp[i][j - 2];
-                    }
-                } else if (p.charAt(j - 1) == '.' || p.charAt(j - 1) == s.charAt(i - 1)) {
-                    dp[i][j] = dp[i - 1][j - 1];
-                }
-            }
-        }
         return dp[m][n];
     }
 }
