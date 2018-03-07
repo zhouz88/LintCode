@@ -39,3 +39,30 @@ class Solution {
         return true;
     }
 }
+
+//
+import java.util.HashSet;
+
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        for (int i = 0; i < 9; i++) {
+            HashSet<Integer> colSet = new HashSet<>();
+            HashSet<Integer> rowSet = new HashSet<>();
+            HashSet<Integer> cubicSet = new HashSet<>();
+            int len = 3 * (i/3);
+            int n = 3 * (i%3);
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.' && !rowSet.add(board[i][j] - '0')) {
+                    return false;
+                }
+                if (board[j][i] != '.' && !colSet.add(board[j][i] - '0')) {
+                    return false;
+                }
+                if (board[len + j/3][n + j%3] != '.' && !cubicSet.add(board[len + j/3][n + j%3] - '0')) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
