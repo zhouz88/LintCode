@@ -36,3 +36,33 @@ class Solution {
         nums[rightLocation] = tmp;
     }
 }
+
+//
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int i = 0;
+        int n = nums.length;
+        while (i < n) {
+            if (nums[i] == i + 1) {
+                i++;
+            } else if (nums[i] > 0 && nums[i] <= n) {
+                int rightPositon = nums[i] - 1;
+                if (nums[rightPositon] == nums[i]) {
+                    i++;
+                } else {
+                    int tmp = nums[i];
+                    nums[i] = nums[rightPositon];
+                    nums[rightPositon] = tmp;
+                }
+            } else {
+                i++;
+            }
+        }
+        for (i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+        return n + 1;
+    }
+}
