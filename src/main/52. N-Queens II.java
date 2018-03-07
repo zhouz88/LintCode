@@ -42,3 +42,36 @@ class Solution {
         return true;
     }
 }
+//
+class Solution {
+    public int totalNQueens(int n) {
+        int[] path = new int[n];
+        List<int[]> pathList = new ArrayList<>();
+        dfs(path, 0, pathList);
+        return pathList.size();
+    }
+
+    private void dfs(int[] path, int i, List<int[]> pathList) {
+        if (i == path.length) {
+            pathList.add(Arrays.copyOf(path, path.length));
+            return;
+        }
+        for (int j = 0; j < path.length; j++) {
+            if (isValid(path, i, j)) {
+                path[i] =  j;
+                dfs(path, i + 1, pathList);
+                path[i] = 0;
+            }
+        }
+    }
+
+    private boolean isValid(int[] path, int i, int j) {
+        for (int k = 0; k < i; k++) {
+            int y = path[k];
+            if (y == j || Math.abs(k - i) == Math.abs(y - j)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
