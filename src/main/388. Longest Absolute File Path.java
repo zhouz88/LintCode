@@ -1,47 +1,3 @@
-import java.util.Stack;
-
-class Solution {
-    public int lengthLongestPath(String s) {
-        String[] t = s.split("\n");
-        Stack<String> stack = new Stack<>();
-        int len = 0, max = 0;
-        
-        for (String k : t) {
-            int total = getT(k);
-            if (stack.isEmpty() || getT(stack.peek()) + 1 == total) {
-                stack.add(k);
-                len += k.length() - total;
-                if (k.contains(".")) {
-                    max = Math.max(max, len + stack.size() - 1);
-                }
-            } else if (getT(stack.peek()) >= total) {
-                while (!stack.isEmpty() && getT(stack.peek()) >= total) { //wrong 1 so m any cases~
-                    String tmp = stack.pop();
-                    len -= tmp.length() - (getT(tmp));
-                }
-                stack.add(k);
-                len += k.length() - total;
-                if (k.contains(".")) {
-                    max = Math.max(max, len + stack.size() - 1);
-                }
-            }
-        }
-        
-        return max;
-    }
-    
-    private int getT(String s) {
-        int i = 0;
-        while (i < s.length() && s.charAt(i) == '\t') {
-            i++;
-        }
-        return i;
-    }
-}
-
-//
-import java.util.Stack;
-
 class Solution {
     public int lengthLongestPath(String input) {
         String[] t = input.split("\n");
@@ -49,16 +5,8 @@ class Solution {
         int max = 0;
         for (int i = 0; i < t.length; i++) {
             int o = cntOft(t[i]);
-            if (stk.isEmpty()) {
+            if (stk.isEmpty() || cntOft(stk.peek()) < o) {
                 stk.add(t[i]);
-                if (t[i].contains(".")) {
-                    max = Math.max(max, len(stk));
-                }
-            } else if (o > cntOft(stk.peek())) {
-                stk.add(t[i]);
-                if (t[i].contains(".")) {
-                    max = Math.max(max, len(stk));
-                }
             } else if (cntOft(stk.peek()) >= o){
                 while (!stk.isEmpty() && cntOft(stk.peek()) >= o) {
                     stk.pop();
@@ -67,6 +15,9 @@ class Solution {
                 if (t[i].contains(".")) {
                     max = Math.max(max, len(stk));
                 }
+            }
+            if (t[i].contains(".")) {
+                max = Math.max(max, len(stk));
             }
         }
         return max;
