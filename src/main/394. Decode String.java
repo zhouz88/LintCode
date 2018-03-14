@@ -1,39 +1,39 @@
 import java.util.Stack;
 
 class Solution {
+    //s = "2[abc]3[cd]ef", return "abcabccdcdcdef".
     public String decodeString(String s) {
-        Stack<String> stack = new Stack<>();
-        StringBuilder sb = new StringBuilder();
-        for (char ch : s.toCharArray()) {
-            if (ch == ']') {
-                sb = new StringBuilder();
-                while (!stack.peek().equals("[")) {// wrong 1
-                    sb.insert(0, stack.pop());
+        Stack<Object> stk = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isLetter(s.charAt(i))) {
+                stk.add(s.charAt(i) + "");
+            } else if (Character.isDigit(s.charAt(i))) {
+                int tmp = s.charAt(i) - '0';
+                while (i + 1 < s.length() && Character.isDigit(s.charAt(i + 1))) {
+                    tmp = 10 * tmp + s.charAt(++i) - '0';
                 }
-                stack.pop();
-                int tmp = 0;
-                String num = "";
-                while (!stack.isEmpty() && isD(stack.peek())) {
-                    num = stack.pop() + num;
-                }
-                tmp = num.equals("") ? 1: Integer.parseInt(num);
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < tmp; i ++ ) {
-                    stringBuilder.append(sb.toString());
-                }
-                stack.add(stringBuilder.toString());
+                stk.add(tmp);
+            } else if (s.charAt(i) == '[') {
+                stk.add("[");
             } else {
-                stack.add(ch+"");
+                StringBuilder sb = new StringBuilder();
+                while (!stk.peek().equals("[")) {
+                    sb.insert(0, stk.pop());
+                }
+                StringBuilder sn = new StringBuilder();
+                stk.pop();
+                int k = (Integer)stk.pop();
+                while (k != 0) {
+                    sn.append(sb);
+                    k--;
+                }
+                stk.add(sn.toString());
             }
         }
-        String res = "";//wrong 2
-        while (!stack.isEmpty()) {
-            res = stack.pop() + res;
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < stk.size(); i++) {
+            res.append(stk.get(i));
         }
-        return res;
-    }
-
-    private boolean isD(String ch) {
-        return ch.charAt(0) >= '0' && ch.charAt(0) <= '9';
+        return res.toString();
     }
 }
