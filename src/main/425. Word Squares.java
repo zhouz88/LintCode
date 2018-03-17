@@ -77,3 +77,70 @@ class Solution {
         }
     }
 }
+
+//
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<String>> wordSquares(String[] words) {
+        List<List<String>> res = new ArrayList<>();
+        TrieNode root = new TrieNode();
+        buildTrie(root, words);
+        for (String k : words) {
+            List<String> list = new ArrayList<>();
+            list.add(k);
+            dfs(res, root, list);
+        }
+        return res;
+    }
+
+    private void dfs(List<List<String>> res, TrieNode root, List<String> list) {
+        if (list.get(0).length() > list.size()) {
+            TrieNode node = root;
+            for (int i = 0; i < list.size(); i++) {
+                node = node.map[list.get(i).charAt(list.size()) - 'a'];
+                if (node == null) return;
+            }
+            List<String> ret = new ArrayList<>();
+            getString(node, ret);
+            for (int i = 0; i < ret.size(); i++) {
+                list.add(ret.get(i));
+                dfs(res, root, list);
+                list.remove(list.size() - 1);
+            }
+        } else {
+            res.add(new ArrayList<>(list));
+        }
+    }
+
+    private void getString(TrieNode node, List<String> ret) {
+        if (node.word != null) {
+            ret.add(node.word);
+            return;
+        }
+        for (int i = 0; i < 26; i++) {
+            if (node.map[i] != null) {
+                getString(node.map[i], ret);
+            }
+        }
+    }
+
+    private void buildTrie(TrieNode root, String[] words) {
+        for (int i = 0; i < words.length; i++) {
+            TrieNode node = root;
+            for (char ch : words[i].toCharArray()) {
+                if (node.map[ch - 'a'] == null) {
+                    node.map[ch - 'a'] = new TrieNode();
+                }
+                node = node.map[ch - 'a'];
+            }
+            node.word = words[i];
+        }
+    }
+
+    private static class TrieNode {
+        TrieNode[] map = new TrieNode[26];
+        String word = null;
+    }
+}
