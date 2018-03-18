@@ -41,5 +41,59 @@ class Solution {
             sb.append("</b>");
         }
         return sb.toString();
+ 
+   }
+}
+
+//* use words run
+
+class Solution {
+    public String addBoldTag(String s, String[] dict) {
+        int[] array = new int[s.length()];
+        //range addition
+        for (int i = 0; i < dict.length; i++) {
+            String cur = dict[i];
+            for (int j = 0; j < s.length();) {
+                int k = s.indexOf(cur, j);
+                if (k == -1) {
+                    break;
+                } else {
+                    array[k] += 1;
+                    if (k + cur.length() < s.length()) {
+                        array[k + cur.length()] -= 1;
+                    }
+                    j = k + 1;
+                }
+            }
+        }
+        int sum = 0;
+
+        for (int i = 0; i < array.length; i++) {
+            sum += array[i];
+            array[i] = sum;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        int cnt = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (array[i] > 0) {
+                sb.append(s.charAt(i));
+                cnt++;
+            } else {
+                if (cnt > 0) {
+                    sb.insert(sb.length() - cnt,"<b>");
+                    sb.append("</b>");
+                }
+                sb.append(s.charAt(i));
+                cnt = 0;
+            }
+        }
+
+        if (cnt > 0) {
+            sb.insert(sb.length() - cnt,"<b>");
+            sb.append("</b>");
+        }
+        return sb.toString();
     }
 }
