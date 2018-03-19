@@ -85,3 +85,28 @@ class MyCalendar{
  * MyCalendar obj = new MyCalendar();
  * boolean param_1 = obj.book(start,end);
  */
+import java.util.Map;
+import java.util.TreeMap;
+
+class MyCalendar{
+    private TreeMap<Integer, Integer> map = new TreeMap<>();
+    public MyCalendar() {
+
+    }
+
+    public boolean book(int start, int end) {
+        Integer floor = map.floorKey(start);
+        if (floor != null && map.get(floor) - 1 == 0) {
+            return false;
+        }
+        Integer lower = map.lowerKey(end);
+        if (lower != null && lower > start) {
+            return false;
+        }
+        map.put(start, map.getOrDefault(start, 0) + 1);
+        map.put(end, map.getOrDefault(end, 0) - 1);
+        if (map.get(start) == 0) map.remove(start);
+        if (map.get(end) == 0)map.remove(end);
+        return true;
+    }
+}
