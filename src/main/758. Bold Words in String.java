@@ -3,15 +3,16 @@ class Solution {
         int[] array = new int[S.length()];
         for (int i = 0; i < words.length; i++) {
             for (int j = 0; j <= S.length() - words[i].length();) {
-                if (S.indexOf(words[i], j) != -1) {
-                    int idx = S.indexOf(words[i], j);
+                int idx = S.indexOf(words[i], j);
+                if (idx != -1) {
+                    // int idx = S.indexOf(words[i], j);
                     array[idx]++;
                     if (idx + words[i].length() < S.length()) {
                         array[idx + words[i].length()]--;
                     }
                     j = idx + 1;
                 } else {
-                    j++;
+                    break;
                 }
             }
         }
