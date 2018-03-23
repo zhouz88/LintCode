@@ -12,10 +12,9 @@ class Solution {
         q.add(start);
         int max = 999999999;
         final int[][] directions = {{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
-        List<String> res = new ArrayList<>();
-        List<String>[][] dp = new ArrayList[m][n];
-        dp[start[0]][start[1]] = new ArrayList<>();
-        dp[start[0]][start[1]].add("");
+        String res = null;
+        String[][] dp = new String[m][n];
+        dp[start[0]][start[1]] = "";
         while (!q.isEmpty()) {
             int size = q.size();
             for (int z = 0; z < size; z++) {
@@ -23,9 +22,12 @@ class Solution {
                 //System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
                 if (destination[0] == node[0] && destination[1] == node[1]) {
                     if (distance[node[0]][node[1]] <= max ) {
+                        if (distance[node[0]][node[1]] < max) {
+                            res = dp[node[0]][node[1]];
+                        } else {
+                            res = (dp[node[0]][node[1]]).compareTo(res) < 0?(dp[node[0]][node[1]]) :res;
+                        }
                         max = distance[node[0]][node[1]];
-                        if (distance[node[0]][node[1]] < max) res.clear();
-                        res.addAll(dp[destination[0]][destination[1]]);
                     }
                     continue;
                 }
@@ -35,17 +37,16 @@ class Solution {
                     int total = 1;
                     if (destination[0] == x && destination[1] == y) {
                         if (distance[node[0]][node[1]] + total <= max) {
-                            max = distance[node[0]][node[1]] + total;
-                           // System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
-                            if (distance[node[0]][node[1]] + total < max) res.clear();
-                            char D = getUDLR(x, y, node[0], node[1]);
-                            List<String> list = new ArrayList<>();
-                            for (String k : dp[node[0]][node[1]]) {
-                                String tmp = k + D;
-                                list.add(tmp);
-                               // System.out.println(tmp);
+                            
+                            // System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
+                            if (distance[node[0]][node[1]] + total < max) {
+                                char D = getUDLR(x, y, node[0], node[1]);
+                                res = dp[node[0]][node[1]] + D;
+                            } else {
+                                char D = getUDLR(x, y, node[0], node[1]);
+                                res = (dp[node[0]][node[1]] + D).compareTo(res) < 0?(dp[node[0]][node[1]] + D) :res;
                             }
-                            res.addAll(list);
+                            max = distance[node[0]][node[1]] + total;
                         }
                         continue;
                     }
@@ -58,16 +59,16 @@ class Solution {
                             if (destination[0] == x && destination[1] == y) {
                                 flag = true;
                                 if (distance[node[0]][node[1]] + total <= max) {
-                                    max = distance[node[0]][node[1]] + total;
-                                    if (distance[node[0]][node[1]] + total < max) res.clear();
-                                    char D = getUDLR(x, y, node[0], node[1]);
-                                    List<String> list = new ArrayList<>();
-                                    for (String k : dp[node[0]][node[1]]) {
-                                        String tmp = k + D;
-                                        list.add(tmp);
+                                    
+                                    // System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
+                                    if (distance[node[0]][node[1]] + total < max) {
+                                        char D = getUDLR(x, y, node[0], node[1]);
+                                        res = dp[node[0]][node[1]] + D;
+                                    } else {
+                                        char D = getUDLR(x, y, node[0], node[1]);
+                                        res = (dp[node[0]][node[1]] + D).compareTo(res) < 0?(dp[node[0]][node[1]] + D) :res;
                                     }
-                                    res.addAll(list);
-                                    break;
+                                    max = distance[node[0]][node[1]] + total;
                                 }
                             }
                         }
@@ -75,34 +76,20 @@ class Solution {
                         if (distance[x][y] > distance[node[0]][node[1]] + total) {
                             distance[x][y] = distance[node[0]][node[1]] + total;
                             q.add(new int[]{x, y});
-                            dp[x][y] = new ArrayList<>();
                             char D = getUDLR(x,y, node[0], node[1]);
-                            for (String k : dp[node[0]][node[1]]) {
-                                String tmp = k + D;
-                                dp[x][y].add(tmp);
-                            }
+                            dp[x][y] = dp[node[0]][node[1]] + D;
+
                         } else if (distance[x][y] == distance[node[0]][node[1]] + total) {
                             q.add(new int[]{x, y});
                             char D = getUDLR(x,y, node[0], node[1]);
-                            Collections.sort(dp[x][y]);
-                            String t = dp[x][y].get(0);
-                            dp[x][y] = new ArrayList<>();
-                            for (String k : dp[node[0]][node[1]]) {
-                                String tmp = k + D;
-                                dp[x][y].add(tmp);
-                            }
-                            dp[x][y].add(t);
-                                
+                            String tmp = dp[node[0]][node[1]] + D;
+                            dp[x][y] = tmp.compareTo(dp[x][y]) < 0 ?  tmp : dp[x][y];
                         }
                     }
                 }
             }
         }
-        Collections.sort(res);
-        if (res.size() == 0) {
-            return "impossible";
-        }
-        return res.get(0);
+        return res == null ? "impossible" : res;
     }
 
     private char getUDLR(int x, int y, int x0, int y0) {
