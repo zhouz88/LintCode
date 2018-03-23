@@ -19,48 +19,20 @@ class Solution {
             int size = q.size();
             for (int z = 0; z < size; z++) {
                 int[] node = q.poll();
-                //System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
-                if (destination[0] == node[0] && destination[1] == node[1]) {
-                    if (distance[node[0]][node[1]] <= max ) {
-                        if (distance[node[0]][node[1]] < max) {
-                            res = dp[node[0]][node[1]];
-                        } else {
-                            res = (dp[node[0]][node[1]]).compareTo(res) < 0?(dp[node[0]][node[1]]) :res;
-                        }
-                        max = distance[node[0]][node[1]];
-                    }
-                    continue;
-                }
                 for (int[] dir : directions) {
-                    int x = node[0] + dir[0];
-                    int y = node[1] + dir[1];
-                    int total = 1;
-                    if (destination[0] == x && destination[1] == y) {
-                        if (distance[node[0]][node[1]] + total <= max) {
-                            
-                            // System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
-                            if (distance[node[0]][node[1]] + total < max) {
-                                char D = getUDLR(x, y, node[0], node[1]);
-                                res = dp[node[0]][node[1]] + D;
-                            } else {
-                                char D = getUDLR(x, y, node[0], node[1]);
-                                res = (dp[node[0]][node[1]] + D).compareTo(res) < 0?(dp[node[0]][node[1]] + D) :res;
-                            }
-                            max = distance[node[0]][node[1]] + total;
-                        }
-                        continue;
-                    }
-                    if (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] != 1) {
+                    int x = node[0];
+                    int y = node[1];
+                    int total = 0;
+                    if (x + dir[0] >= 0 && y + dir[1] >= 0 && x + dir[0] < m && y + dir[1]< n && maze[x + dir[0]][y + dir[1]] != 1) {
                         boolean flag = false;
-                        while (x + dir[0] >= 0 && y + dir[1] >= 0 && x + dir[0] < m && y + dir[1] < n && maze[x + dir[0]][y + dir[1]] != 1) {
+                        while (x + dir[0] >= 0 && y + dir[1] >= 0 && x + dir[0] < m && y + dir[1] < n &&
+                                maze[x + dir[0]][y + dir[1]] != 1) {
                             total++;
                             x += dir[0];
                             y += dir[1];
                             if (destination[0] == x && destination[1] == y) {
                                 flag = true;
                                 if (distance[node[0]][node[1]] + total <= max) {
-                                    
-                                    // System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
                                     if (distance[node[0]][node[1]] + total < max) {
                                         char D = getUDLR(x, y, node[0], node[1]);
                                         res = dp[node[0]][node[1]] + D;
