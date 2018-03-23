@@ -11,7 +11,7 @@ class Solution {
         Queue<int[]> q = new LinkedList<>();
         q.add(start);
         int max = 999999999;
-        final int[][] directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+        final int[][] directions = {{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
         List<String> res = new ArrayList<>();
         List<String>[][] dp = new ArrayList[m][n];
         dp[start[0]][start[1]] = new ArrayList<>();
@@ -36,13 +36,14 @@ class Solution {
                     if (destination[0] == x && destination[1] == y) {
                         if (distance[node[0]][node[1]] + total <= max) {
                             max = distance[node[0]][node[1]] + total;
-                            // System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
+                           // System.out.println(distance[node[0]][node[1]] + ":" + node[0] +":"+ node[1]);
                             if (distance[node[0]][node[1]] + total < max) res.clear();
                             char D = getUDLR(x, y, node[0], node[1]);
                             List<String> list = new ArrayList<>();
                             for (String k : dp[node[0]][node[1]]) {
                                 String tmp = k + D;
                                 list.add(tmp);
+                               // System.out.println(tmp);
                             }
                             res.addAll(list);
                         }
@@ -71,7 +72,7 @@ class Solution {
                             }
                         }
                         if (flag) continue;
-                        if (distance[x][y] >= distance[node[0]][node[1]] + total) {
+                        if (distance[x][y] > distance[node[0]][node[1]] + total) {
                             distance[x][y] = distance[node[0]][node[1]] + total;
                             q.add(new int[]{x, y});
                             dp[x][y] = new ArrayList<>();
@@ -80,6 +81,18 @@ class Solution {
                                 String tmp = k + D;
                                 dp[x][y].add(tmp);
                             }
+                        } else if (distance[x][y] == distance[node[0]][node[1]] + total) {
+                            q.add(new int[]{x, y});
+                            char D = getUDLR(x,y, node[0], node[1]);
+                            Collections.sort(dp[x][y]);
+                            String t = dp[x][y].get(0);
+                            dp[x][y] = new ArrayList<>();
+                            for (String k : dp[node[0]][node[1]]) {
+                                String tmp = k + D;
+                                dp[x][y].add(tmp);
+                            }
+                            dp[x][y].add(t);
+                                
                         }
                     }
                 }
