@@ -3,18 +3,20 @@ class Solution {
     public String findShortestWay(int[][] maze, int[] start, int[] destination) {
         int m = maze.length, n = maze[0].length;
         int[][] distance = new int[m][n];
+
         for (int[] dis : distance) {
             Arrays.fill(dis, Integer.MAX_VALUE);
         }
+
         distance[start[0]][start[1]] = 0;
         Queue<int[]> q = new LinkedList<>();
         q.add(start);
+
         int max = Integer.MAX_VALUE;
         final int[][] directions = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
-        String res = null;
         String[][] dp = new String[m][n];
         dp[start[0]][start[1]] = "";
-        
+
         while (!q.isEmpty()) {
             int[] node = q.poll();
             for (int[] dir : directions) {
@@ -31,12 +33,12 @@ class Solution {
                             flag = true;
                             if (distance[node[0]][node[1]] + total < max) {
                                 char D = getUDLR(x, y, node[0], node[1]);
-                                res = dp[node[0]][node[1]] + D;
+                                dp[destination[0]][destination[1]] = dp[node[0]][node[1]] + D;
                                 max = distance[node[0]][node[1]] + total;
                             } else if (distance[node[0]][node[1]] + total == max){
                                 char D = getUDLR(x, y, node[0], node[1]);
                                 String tmp = dp[node[0]][node[1]] + D;
-                                res = (tmp).compareTo(res) < 0 ? tmp : res;
+                                dp[destination[0]][destination[1]] = (tmp).compareTo(dp[destination[0]][destination[1]]) < 0 ? tmp : dp[destination[0]][destination[1]];
                             }
                         }
                     }
@@ -56,7 +58,7 @@ class Solution {
                 }
             }
         }
-        return res == null ? "impossible" : res;
+        return dp[destination[0]][destination[1]] == null ? "impossible" : dp[destination[0]][destination[1]];
     }
 
     private char getUDLR(int x, int y, int x0, int y0) {
