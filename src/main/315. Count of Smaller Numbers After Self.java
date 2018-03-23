@@ -107,3 +107,114 @@ public class Solution {
         }
     }
 }
+
+//
+class Solution {
+    public List<Integer> countSmaller(int[] A) {
+        List<Integer> res = new ArrayList<>();
+        if (A == null || A.length == 0) return res;
+        int min = A[0], max = A[0];
+        
+        for (int i : A) {
+            min = Math.min(min, i);
+            max = Math.max(max, i);
+        }
+        
+        if (min < 0) {
+            for (int i = A.length - 1; i >= 0; i--) {
+                A[i] -= min;
+            }
+            min = 0;
+            max -= min;
+        }
+         
+        TreeNode root = build(min, 100000);
+        
+        for (int i = A.length - 1; i >= 0; i--){
+            int ans = 0;
+            if(A[i]>0)ans = query(root, min, A[i] - 1);
+            add(root, A[i], 1);
+            res.add(ans);
+        }
+        
+        Collections.reverse(res);
+        return res;
+    }
+
+    private int query(TreeNode root, int start, int end) {
+        if (start > end) return 0;
+        if (start == root.start && end == root.end){
+            return root.count;
+        }
+
+        int leftCount = 0;
+        int rightCount = 0;
+
+        int mid = (root.start + root.end) / 2;
+        if (start <= mid) {
+            if (end > mid) {
+                leftCount = query(root.left, start, mid);
+            } else {
+                leftCount = query(root.left, start, end);
+            }
+        }
+
+        if (end > mid) {
+            if (start <= mid) {
+                rightCount = query(root.right, mid + 1, end);
+            } else {
+                rightCount = query(root.right, start, end);
+            }
+        }
+        return leftCount + rightCount;
+    }
+
+
+    private void add(TreeNode root, int index, int val) {
+        if (root.start == root.end) {
+            root.count += val;
+            return;
+        }
+
+        int mid = (root.start + root.end)/2;
+
+        if (index >= root.start && index <= mid) {
+            add(root.left, index, val);
+        }
+
+        if (index <= root.end && index > mid) {
+            add(root.right, index, val);
+        }
+
+        root.count = root.right.count + root.left.count;
+    }
+
+    private TreeNode build(int start, int end) {
+        if (start > end) {
+            return null;
+        } else {
+            TreeNode root = new TreeNode(start, end);
+            if (start == end) {
+                return root;
+            }
+            int mid = (start + end)/2;
+        
+            root.left = build(start, mid);
+            root.right = build(mid + 1, end);
+            return root;
+        }
+    }
+
+    private static class TreeNode {
+        int start;
+        int end;
+        int count;
+        TreeNode left;
+        TreeNode right;
+        public TreeNode(int a, int b) {
+            start = a;
+            end = b;
+        }
+    }
+}
+
