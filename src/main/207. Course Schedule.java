@@ -3,42 +3,44 @@ import java.util.List;
 
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        boolean[] visited = new boolean[numCourses];
         List<Integer>[] adjList = new ArrayList[numCourses];
-        int i;
-        for (i = 0; i < numCourses; i++) {
+        for (int i = 0; i < numCourses; i++) {
             adjList[i] = new ArrayList<>();
         }
-        for (int[] e : prerequisites) {
-            adjList[e[1]].add(e[0]);
+        for (int i = 0; i < prerequisites.length; i++) {
+            adjList[prerequisites[i][0]].add(prerequisites[i][1]);
         }
-        for (i = 0; i < numCourses; i++) {
-            if (hasCycle(adjList, i, visited, new boolean[numCourses])) {
+        int[] state = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCycle(state, adjList, i)) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean hasCycle(List<Integer>[] adjList, int i, boolean[] visited, boolean[] cache) {
-        if (visited[i]) {
+    private boolean hasCycle(int[] state, List<Integer>[] adjList, int start) {
+        if (adjList[start].size() == 0) {
+            state[start] = 1;
             return false;
         }
-
-        if (cache[i]) {
+        if (state[start] == 1) {
+            return false;
+        }
+        if (state[start] == -1) {
             return true;
         }
-        
-        cache[i] = true;
-        
-        for (int k:adjList[i]) {
-            if (hasCycle(adjList, k, visited, cache)) {
+        if (state[start] == 2) {
+            return true;
+        }
+        state[start] = 2;
+        for (int i = 0; i < adjList[start].size(); i++) {
+            if (hasCycle(state, adjList, adjList[start].get(i))) {
+                state[start] = -1;
                 return true;
             }
         }
-        
-        visited[i] = true;
-
+        state[start] = 1;
         return false;
     }
 }
