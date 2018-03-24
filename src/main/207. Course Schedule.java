@@ -20,10 +20,6 @@ class Solution {
     }
 
     private boolean hasCycle(int[] state, List<Integer>[] adjList, int start) {
-        if (adjList[start].size() == 0) {
-            state[start] = 1;
-            return false;
-        }
         if (state[start] == 1) {
             return false;
         }
