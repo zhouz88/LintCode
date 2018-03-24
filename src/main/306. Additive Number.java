@@ -12,7 +12,7 @@ class Solution {
         } else if (start == s.length()) {
             return false;
         }
-        
+
         for (int i = start; i < s.length(); i++) {
             String tmp = s.substring(start, i + 1);
             if (i > start && s.charAt(start) == '0') {
@@ -23,9 +23,8 @@ class Solution {
                 stack.add(c);
                 if (dfs(s, i + 1, stack)) {
                     return true;
-                } else {
-                    stack.pop();
                 }
+                stack.pop();
             } else {
                 BigInteger first = stack.get(stack.size() - 2);
                 BigInteger second = stack.peek();
@@ -33,13 +32,12 @@ class Solution {
                     stack.add(c);
                     if (dfs(s, i + 1, stack)) {
                         return true;
-                    } else {
-                        stack.pop();
-                    }
+                    } 
+                    stack.pop();
                 }
             }
         }
-        
+
         return false;
     }
 }
