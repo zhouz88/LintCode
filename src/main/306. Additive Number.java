@@ -1,5 +1,4 @@
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Stack;
 
 class Solution {
@@ -7,36 +6,40 @@ class Solution {
         return dfs(num, 0, new Stack<>());
     }
 
-    private boolean dfs(String num, int start, Stack<BigInteger> stk) {
-        if (start == num.length() && stk.size() >= 3) {
+    private boolean dfs(String s, int start, Stack<BigInteger> stack) {
+        if (start == s.length() && stack.size() >= 3) {
             return true;
-        } else if (start == num.length()) {
+        } else if (start == s.length()) {
             return false;
         }
-
-        boolean found = false;
-
-        for (int i = start; i < num.length(); i++) {
-            String tmp = num.substring(start, i + 1);
-            if (tmp.charAt(0) == '0' && tmp.length() > 1) {
+        
+        for (int i = start; i < s.length(); i++) {
+            String tmp = s.substring(start, i + 1);
+            if (i > start && s.charAt(start) == '0') {
                 break;
             }
-            if (stk.size() >= 2) {
-                BigInteger a = stk.get(stk.size() - 2);
-                BigInteger b = stk.get(stk.size() - 1);
-                BigInteger c = new BigInteger(tmp);
-                if (a.add(b).equals(c)) {
-                    stk.add(c);
-                    found |= dfs(num,i + 1, stk);
-                    stk.pop();
-                    if (found) return true;
+            BigInteger c = new BigInteger(tmp);
+            if (stack.size() <= 1) {
+                stack.add(c);
+                if (dfs(s, i + 1, stack)) {
+                    return true;
+                } else {
+                    stack.pop();
                 }
             } else {
-                stk.add(new BigInteger(tmp));
-                found |= dfs(num, i + 1, stk);
-                stk.pop();
+                BigInteger first = stack.get(stack.size() - 2);
+                BigInteger second = stack.peek();
+                if ((first.add(second)).equals(c)) {
+                    stack.add(c);
+                    if (dfs(s, i + 1, stack)) {
+                        return true;
+                    } else {
+                        stack.pop();
+                    }
+                }
             }
         }
-        return found;
+        
+        return false;
     }
 }
