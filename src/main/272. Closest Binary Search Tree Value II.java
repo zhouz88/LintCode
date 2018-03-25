@@ -2,102 +2,82 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- 272. Closest Binary Search Tree Value II
- *     TreeNode(int x) { val = x; }
- 272. Closest Binary Search Tree Value II
-DescriptionHintsSubmissionsDiscussSolution
-DiscussPick One
-Given a non-empty binary search tree and a target value, find k values in the BST that are closest to the target.
-
-Note:
-Given target value is a floating point.
-You may assume k is always valid, that is: k ≤ total nodes.
-You are guaranteed to have only one unique set of k values in the BST that are closest to the target.
-Follow up:
-Assume that the BST is balanced, could you solve it in less than O(n) runtime (where n = total nodes)?
-
-
- * }
- */
-
-//6ms
 class Solution {
     public List<Integer> closestKValues(TreeNode root, double target, int k) {
-        
-        List<Integer> ret = new ArrayList<>();
-        Stack<TreeNode> stack = new Stack<>();
-        TreeNode p = root;
-        while (p != null || !stack.isEmpty()) {
-            if (p != null) {
-                stack.add(p);
-                p = p.left;
-            } else {
-                p = stack.pop();
-                ret.add(p.val);
-                p = p.right;
-            }
+        List<Integer> res = new ArrayList<>();
+        Stack<TreeNode> lStack = new Stack<>();
+        Stack<TreeNode> rStack = new Stack<>();
+        fillSmaller(lStack, root, target);
+        fillBigger(rStack, root, target);
+
+        if (!lStack.isEmpty() && !rStack.isEmpty() && lStack.peek() == rStack.peek()) {
+            add(res, lStack, false);
+            res.remove(res.size() - 1);
         }
-        
-        int l = 0, r = ret.size() - k;
-        
-        while (l <= r) {
-            int mid = ((r - l) >> 1) + l;
-            if (mid + k == ret.size() || 2*target < ret.get(mid) + ret.get(mid + k)) {
-                r = mid - 1;
+
+        while (k-- > 0) {
+            if (lStack.isEmpty() && rStack.isEmpty()) {
+                break;
+            } else if (lStack.isEmpty()) {
+                add(res, rStack, true);
+            } else if (rStack.isEmpty()) {
+                add(res, lStack, false);
             } else {
-                l = mid + 1;
-            }             
-        }
-    
-        return ret.subList(l, l + k);
-        
-    }
-}
-
-//7ms
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
-
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
-class Solution {
-    public List<Integer> closestKValues(TreeNode root, double target, int k) {
-
-        LinkedList<Integer> ret = new LinkedList<>();
-        Stack<TreeNode> stack = new Stack<>();
-        TreeNode p = root;
-        while (p != null || !stack.isEmpty()) {
-            if (p != null) {
-                stack.add(p);
-                p = p.left;
-            } else {
-                p = stack.pop();
-                if (ret.size() < k) {
-                    ret.add(p.val);//wrong 1 p not root!!!!!!!!!!!!!!!!
+                double r = 1.0*((rStack.peek().val) - target);
+                double l = 1.0*(target - (lStack.peek().val));
+                if (l < r) {
+                    add(res, lStack, false);
                 } else {
-                    if (2 * target > (ret.get(0) + p.val)) {
-                        ret.removeFirst();
-                        ret.addLast(p.val);//wrong 1 p not root!!!!!!!!!!!!!!!!
-                    }
+                    add(res, rStack, true);
                 }
-                p = p.right;
             }
         }
-        return ret;
+        return res;
+    }
+
+    private void add(List<Integer> res, Stack<TreeNode> stack, boolean isR) {
+        TreeNode node = stack.pop();
+        res.add(node.val);
+        if (isR) {
+            node = node.right;
+        } else {
+            node = node.left;
+        }
+        while (node != null) {
+            stack.add(node);
+            if (isR) {
+                node = node.left;
+            } else {
+                node = node.right;
+            }
+        }
+    }
+
+    private void fillBigger(Stack<TreeNode> rStack, TreeNode root, double target) {
+        while (root != null) {
+            if (root.val > target) {
+                rStack.add(root);
+                root = root.left;
+            } else if (root.val < target) {
+                root = root.right;
+            } else {
+                rStack.add(root);
+                break;
+            }
+        }
+    }
+
+    private void fillSmaller(Stack<TreeNode> lStack, TreeNode root, double target) {
+        while (root != null) {
+            if (root.val < target) {
+                lStack.add(root);
+                root = root.right;
+            } else if (root.val > target) {
+                root = root.left;
+            } else {
+                lStack.add(root);
+                break;
+            }
+        }
     }
 }
