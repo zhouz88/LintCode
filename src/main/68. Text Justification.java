@@ -25,7 +25,7 @@ class Solution {
                     for (int t = 0; t < n; t++) {
                         sb.append(" ");
                     }
-                    if (r > 0) {
+                    if (r > 0) { //TWO POINTERS
                         sb.append(" ");
                         r--;
                     }
