@@ -15,7 +15,6 @@ public class Solution extends Reader4 {
         while (idx < n) {
             cnt = read4(temp);
             if (cnt == 0) break;
-            pointer = 0;
             while (pointer < cnt && idx < n) {
                 buf[idx++] = temp[pointer++];
             }
