@@ -12,7 +12,7 @@ public class Solution {
         }
         int pre = 0;
         for (int i = 0; i < idx; i++) {
-            if (t[i] == ' ') {
+            if (t[i] == ' ') {//保证前边有一个空格 必须在s前+ ” “；
                 reverse(pre, i - 1, t);
                 pre = i + 1;
             } 
