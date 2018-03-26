@@ -1,43 +1,30 @@
 class Solution {
     public boolean isOneEditDistance(String s, String t) {
-       if (Math.abs(s.length() - t.length()) > 1) {
+       if (s == null || t == null) {
            return false;
        }
-       int cnt = 0;
-       if (s.length() == t.length()) {
+       int m = s.length(), n = t.length();
+       if (Math.abs(m - n) > 1) return false;
+       if (m == n) {
            for (int i = 0; i < t.length(); i++) {
                if (t.charAt(i) != s.charAt(i)) {
-                   cnt++;
-                   if (cnt > 1) {
-                       return false;
-                   }
+                   return t.substring(i + 1).equals(s.substring(i + 1));
                }
            }
-           return cnt == 1;
+           return false;
        } else {
            String tmp = s;
-           if (t.length() > tmp.length()) {
-               s = t;
-               t = tmp;
+           if (m < n) {
+                s = t;
+                t = tmp;
            }
-           int i = 0;
-           int j = 0;
-           while (i < s.length() && j < t.length()) {
-               if (s.charAt(i) != t.charAt(j)) {
-                   cnt++;
-                   if (cnt == 2) {
-                       return false;
-                   }
-                   i++;
-               } else {
-                   j++;
-                   i++;
+           for (int i = 0; i < t.length(); i++) {
+               if (t.charAt(i) != s.charAt(i)) {
+                   return t.substring(i).equals(s.substring(i + 1));
                }
            }
-           if (j == t.length()) {
-               return true;
-           }
-           return cnt == 1;
+           return true;
        }
     }
+
 }
