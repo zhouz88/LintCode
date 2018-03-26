@@ -263,3 +263,113 @@ public class Codec {
     }
 }
 
+//
+import com.sun.org.apache.regexp.internal.RE;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        StringBuilder sb = new StringBuilder();
+        sb.append(root.val + ",");
+        while (!q.isEmpty()) {
+            TreeNode node = q.poll();
+            if (node.left != null) {
+                q.add(node.left);
+                sb.append(node.left.val + ",");
+            } else {
+                sb.append("#,");
+            }
+            if (node.right != null) {
+                q.add(node.right);
+                sb.append(node.right.val + ",");
+            } else {
+                sb.append("#,");
+            }
+        }
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        System.out.println(data);
+        if (data.length() == 0) {
+            return null;
+        }
+        int i = 0;
+        Queue<TreeNode> q = new LinkedList<>();
+        Result result = getNode(i, data);
+        TreeNode root = result.node;
+        i = result.id;
+        q.add(root);
+        while (!q.isEmpty()) {
+            TreeNode node = q.poll();
+            result = getNode(i, data);
+            if (result.node != null) {
+                node.left = result.node;
+                q.add(node.left);
+            }
+            i = result.id;
+            result = getNode(i, data);
+            if (result.node != null) {
+                node.right = result.node;
+                q.add(node.right);
+            }
+            i = result.id;
+        }
+        return root;
+    }
+
+    private Result getNode(int i, String data) {
+        if (i >= data.length()) {
+            return null;
+        }
+        if (data.charAt(i) == '#') {
+            i += 2;
+            return new Result(null, i);
+        }
+        int sign = 1;
+        if (data.charAt(i) == '-') {
+            sign = -1;
+            i++;
+        } else if (data.charAt(i) == '+'){
+            i++;
+        }
+        int tmp = data.charAt(i) - '0';
+        while (i + 1 < data.length() && Character.isDigit(data.charAt(i + 1))) {
+            tmp = 10 * tmp + data.charAt(++i) - '0';
+        }
+        i += 2;
+        return new Result(new TreeNode(sign*tmp), i);
+    }
+
+    private static class Result {
+        TreeNode node;
+        int id;
+        public Result(TreeNode node, int i) {
+            this.node = node;
+            this.id = i;
+        }
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.deserialize(codec.serialize(root));
+
