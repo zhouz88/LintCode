@@ -2,69 +2,66 @@ import java.util.*;
 
 class Solution {
     public String alienOrder(String[] words) {
+        StringBuilder sb =  new StringBuilder();
+        Set<Character>[] graph = new HashSet[26];
         Set<Character> set = new HashSet<>();
-        List<char[]> list = buildEdges(words, set);
-        Map<Character, Set<Character>> graph = new HashMap<>();
-        Map<Character, Integer> ends = new HashMap<>();
-
-        for (char[] ch : list) {
-            graph.putIfAbsent(ch[0], new HashSet<>());
-            if (!graph.get(ch[0]).contains(ch[1])) { //wrong 4 not duplicate should in the list
-                graph.get(ch[0]).add(ch[1]);
-                ends.put(ch[1], ends.getOrDefault(ch[1],0)+1);
-            }
-        }
-
+        
+        for (int i = 0; i < 26; i++) graph[i] = new HashSet<>();
+        buildGraphAndSet(words, graph, set);
+        Map<Character, Integer> indegree = new HashMap<>();
+        buildeIndegree(indegree, graph);
         Queue<Character> q = new LinkedList<>();
-        for (Character ch: set) {
-            if (!ends.containsKey(ch)) {
+        for (Character ch : set) {
+            // System.out.println(ch);
+            if (!indegree.containsKey(ch)) {
                 q.add(ch);
             }
         }
-        StringBuilder sb = new StringBuilder();
-        
         while (!q.isEmpty()) {
-            char tmp = q.poll();
-            sb.append(tmp);
-            if (graph.containsKey(tmp)) {
-                for (char ch : graph.get(tmp)) {
-                    ends.put(ch, ends.get(ch) - 1);
-                    if (ends.get(ch) == 0) {
-                        q.add(ch);
-                        ends.remove(ch);
-                    } else {
-                        continue;
-                    }
+            Character node = q.poll();
+            sb.append(node);
+            for (Character ch : graph[node - 'a']) {
+               int number = indegree.get(ch);
+               if (number == 1) {
+                   indegree.remove(ch);
+                   q.add(ch);
+               } else {
+                   number--;
+                   indegree.put(ch, number);
+               }
+            }
+        }
+        if (sb.length() != set.size()) {
+            return "";
+        }
+        return sb.toString();
+    }
+
+    private void buildeIndegree(Map<Character, Integer> indegree, Set<Character>[] graph) {
+        for (int i = 0; i < graph.length; i++) {
+            if (graph[i].size() != 0) {
+                for (Character ch : graph[i]) {
+                    indegree.put(ch, indegree.getOrDefault(ch, 0) + 1);
                 }
             }
         }
-        
-        //System.out.println(sb.toString());
-        if (set.size() == 1) {//wrong 1
-            return ""+set.iterator().next();
-        }
-
-        return sb.length() == set.size() ? sb.toString() : "";//wrong 3
     }
 
-    private List<char[]> buildEdges(String[] words, Set<Character> set) {
-        List<char[]> ret = new ArrayList<>();
-        int i, j;
-        for (i = 0; i < words.length - 1; i++) {
-            j = 0;
-            while (j < Math.min(words[i].length(), words[i + 1].length())
-                    && words[i].charAt(j) == words[i + 1].charAt(j)) {//wrong 1 j should be less than 
-                j++;
-            }
-            if (j < Math.min(words[i].length(), words[i + 1].length())) {
-                ret.add(new char[]{words[i].charAt(j), words[i + 1].charAt(j)});
+    private void buildGraphAndSet(String[] words, Set<Character>[] graph, Set<Character> set) {
+        for (int i = 0; i < words.length - 1; i++) {
+            String start = words[i];
+            String end = words[i + 1];
+            for (int j = 0; j < Math.min(start.length(), end.length()); j++) {
+                if (start.charAt(j) != end.charAt(j)) {
+                    graph[start.charAt(j) - 'a'].add(end.charAt(j));
+                    break;
+                }
             }
         }
-        for (String k : words) {
-            for (char ch : k.toCharArray()) {
+        for (int i = 0; i < words.length; i++) {
+            for (char ch : words[i].toCharArray()) {
                 set.add(ch);
             }
         }
-        return ret;
     }
 }
