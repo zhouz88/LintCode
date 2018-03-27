@@ -1,52 +1,44 @@
-import java.math.BigInteger;
-
 class Solution {
     public int maximumGap(int[] nums) {
-        if (nums.length <= 1) {
+        if (nums == null || nums.length <= 1) {
             return 0;
         }
         if (nums.length == 2) {
             return Math.abs(nums[0] - nums[1]);
         }
-        int min = nums[0];
-        int max = nums[0];
-
-        int len = nums.length;
-
-        for (int i = 0; i < nums.length; i++) {
-            min = Math.min(min, nums[i]);
-            max = Math.max(max, nums[i]);
+        int n = nums.length, min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (int k : nums) {
+            min = Math.min(k, min);
+            max = Math.max(k, max);
         }
-
-        int gap = (int) (Math.ceil((double)((long)max - (long)min)/(len*1.0 - 1)));
-        Node[] buckets = new Node[len - 1];
-
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == min||nums[i] ==max) continue;
-            int idx = (nums[i] - min)/gap;
+        int gap = (int) Math.ceil((1.0*max - 1.0*min)/(n - 1.0));
+        Bucket[] buckets = new Bucket[n - 1];
+        for (int num : nums) {
+            if (num == min || num == max) continue;
+            int idx = (num - min)/gap;
             if (buckets[idx] == null) {
-                buckets[idx] = new Node(Integer.MAX_VALUE, Integer.MIN_VALUE);
+                buckets[idx] = new Bucket(Integer.MAX_VALUE, Integer.MIN_VALUE);
             }
-            buckets[idx].minValue = Math.min(buckets[idx].minValue, nums[i]);
-            buckets[idx].maxValue = Math.max(buckets[idx].maxValue, nums[i]);
+            buckets[idx].max = Math.max(buckets[idx].max, num);
+            buckets[idx].min = Math.min(buckets[idx].min, num);
         }
         int pre = min;
-        int res = 0;
+        int res = Integer.MIN_VALUE;
         for (int i = 0; i < buckets.length; i++) {
             if (buckets[i] == null) continue;
-            res = Math.max(buckets[i].minValue - pre, res);
-            pre = buckets[i].maxValue;
+            res = Math.max(res, buckets[i].min - pre);
+            pre = buckets[i].max;
         }
-        res = Math.max(max - pre, res);
+        res = Math.max(res, max - pre);
         return res;
     }
-
-    private static class Node {
-        int minValue;
-        int maxValue;
-        public Node(int a, int b) {
-            this.maxValue = b;
-            this.minValue = a;
+    
+    private static class Bucket{
+        int min;
+        int max;
+        private Bucket(int min, int max) {
+            this.min = min;
+            this.max = max;
         }
     }
 }
