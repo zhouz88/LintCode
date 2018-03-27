@@ -1,57 +1,40 @@
-import java.util.HashMap;
-import java.util.Map;
-
 public class Solution {
-    public String fractionToDecimal(int n, int d) {
-        if (n == 0) {
-            return "0";
-        }
-        int sign = getSign(n, d);
-        long numerator = Math.abs((long) n);
-        long denominator = Math.abs((long) d);
+    public String fractionToDecimal(int n, int e) {
+        int sign = getSign(n, e);
+        long D = Math.abs((long) n);
+        long d = Math.abs((long) e);
         StringBuilder sb = new StringBuilder();
-
-        sb.append(numerator/denominator);
-        long m = numerator%denominator;
-        if (m != 0) {
-            sb.append(".");
-        } else {
-            if (sign == -1) {
-                return "-"+sb.toString();
-
-            }
+        long res = D/d;
+        long m  = D%d;
+        if (m == 0) {
+            sb.append(sign*res);
             return sb.toString();
         }
-        Map<Long, Integer> map = new HashMap<>();//number - index
-        int idx = sb.length();
-        while (true) {
-            m *= 10;
+        sb.append(res);
+        sb.append(".");
+        Map<Long, Integer> map = new HashMap<>();
+        m *= 10;
+        while (m > 0) {
+            long ret = m/d;
             if (map.containsKey(m)) {
-                int i = map.get(m);
-                sb.insert(i, "(");
+                int idx = map.get(m);
+                sb.insert(idx, "(");
                 sb.append(")");
                 break;
-            } else {
-                map.put(m, idx++);
             }
-            sb.append(m/denominator);
-            m = m%denominator;
-            if (m == 0) {
-                break;
-            }
+            map.put(m, sb.length());
+            sb.append(ret);
+            m = 10 * (m%d);
         }
-        if (sign == -1) {
-            return "-"+sb.toString();
-        }
-        return sb.toString();
+        return sign == -1 ? "-" + sb.toString() : sb.toString();
     }
 
-    private int getSign(int a, int b) {
+    private int getSign(int n, int d) {
         int cnt = 0;
-        if (a < 0) {
+        if (n < 0) {
             cnt++;
         }
-        if (b < 0 ) {
+        if (d < 0) {
             cnt++;
         }
         return cnt == 1 ? -1 : 1;
