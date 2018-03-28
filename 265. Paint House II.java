@@ -1,69 +1,31 @@
 class Solution {
     public int minCostII(int[][] costs) {
-        if (costs == null ||costs.length == 0 || costs[0].length == 0) {
+        if (costs == null || costs.length == 0 || costs[0].length == 0) {
             return 0;
         }
-        
         int n = costs.length, k = costs[0].length;
-        int[] dp = costs[0];
-        int minIdx = 0;
-        int secondIdx = 0;
-
-        for (int i = 1; i < k; i++) {
-            if (dp[i] < dp[minIdx]) {
-                minIdx = i;
-            }
-        }
-
-        int min = Integer.MAX_VALUE;
-
-        for (int i = 0; i < k; i++) {
-            if (minIdx == i) {
-                continue;
-            } else {
-                if (dp[i] < min) {
-                    min = dp[i];
-                    secondIdx = i;
-                }
-            }
-        }
-        
-        for (int i = 1; i < n; i++) {
-            int[] newDp = new int[k];
-            int newMinIdx = -1;
-            int newSecondMinIdx = -1;
-            int minValue = Integer.MAX_VALUE;
-
+        int min1 = -1, min2 = -1;
+        int[] dp = new int[k];
+        for (int i = 0; i < n; i++) {
+            int[] array = new int[k];
+            int lastMin1 = min1, lastMin2 = min2;
+            min1 = -1;
+            min2 = -1;
             for (int j = 0; j < k; j++) {
-                if (j != minIdx) {
-                    newDp[j] = costs[i][j] + dp[minIdx];
+                if (lastMin1 != j) {
+                    array[j] = (lastMin1 == -1 ? 0 : dp[lastMin1]) + costs[i][j];
                 } else {
-                    newDp[j] = costs[i][j] + dp[secondIdx];
+                    array[j] = (lastMin2 == -1 ? 0 : dp[lastMin2]) + costs[i][j];
                 }
-                if (newDp[j] < minValue) {
-                    newMinIdx = j;
-                    minValue = newDp[j];
+                if (min1 == -1|| array[j] < array[min1]) {
+                    min2 = min1;
+                    min1 = j;
+                } else if (min2 == -1 || array[j] < array[min2]) {
+                    min2 = j;
                 }
             }
-
-            minValue = Integer.MAX_VALUE;
-
-            for (int j = 0; j < k; j++) {
-                if (newMinIdx == j) {
-                    continue;
-                } else {
-                    if (newDp[j] < minValue) {
-                        minValue = newDp[j];
-                        newSecondMinIdx = j;
-                    }
-                }
-            }
-
-            minIdx = newMinIdx;
-            secondIdx = newSecondMinIdx;
-            dp = newDp;
+            dp = array;
         }
-
-        return dp[minIdx];
+        return dp[min1];
     }
 }
