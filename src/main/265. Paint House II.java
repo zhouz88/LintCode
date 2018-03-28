@@ -6,30 +6,21 @@ class Solution {
         int n = costs.length, k = costs[0].length;
         int min1 = -1, min2 = -1;
         int[] dp = new int[k];
-        for (int j = 0; j < k; j++) {
-            dp[j] = costs[0][j];
-            if (min1 == -1|| costs[0][j] < costs[0][min1]) {
-                min2 = min1;
-                min1 = j;
-            } else if (min2 == -1 || costs[0][j] <= costs[0][min2]) {
-                min2 = j;
-            }
-        }
-        for (int i = 1; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             int[] array = new int[k];
             int lastMin1 = min1, lastMin2 = min2;
             min1 = -1;
             min2 = -1;
             for (int j = 0; j < k; j++) {
                 if (lastMin1 != j) {
-                    array[j] = dp[lastMin1] + costs[i][j];
+                    array[j] = (lastMin1 == -1 ? 0 : dp[lastMin1]) + costs[i][j];
                 } else {
-                    array[j] = dp[lastMin2] + costs[i][j];
+                    array[j] = (lastMin2 == -1 ? 0 : dp[lastMin2]) + costs[i][j];
                 }
                 if (min1 == -1|| array[j] < array[min1]) {
                     min2 = min1;
                     min1 = j;
-                } else if (min2 == -1 || array[j] <= array[min2]) {
+                } else if (min2 == -1 || array[j] < array[min2]) {
                     min2 = j;
                 }
             }
