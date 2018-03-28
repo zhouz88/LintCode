@@ -88,3 +88,45 @@ class Solution {
         }
     }
 }
+//
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        String S = new String(tasks);
+        int[] counts = new int[26];
+        int[] valid = new int[26];
+        for (char ch : S.toCharArray()) {
+            counts[ch - 'A']++;
+        }
+        int total = 0;
+        //StringBuilder sb = new StringBuilder();
+        for  (int i = 0, cnt = 0; cnt < S.length(); i++) {
+            int j = next(counts, valid, i, n + 1);
+            if (j == -1) {
+                //sb.append(" ");
+                total++;
+            } else {
+                //sb.append((char) ('A' + j));
+                total++;
+                cnt++;
+            }
+        }
+        //return sb.length();
+        return total;
+    }
+
+    private int next(int[] counts, int[] valid, int index, int k) {
+        int maxIdx = -1;
+        for (int i = 0; i < counts.length; i++) {
+            if (counts[i] > 0 && valid[i] <= index) {
+                if (maxIdx == -1) maxIdx = i;
+                else if (counts[i] > counts[maxIdx]) maxIdx = i;
+            }
+        }
+        if (maxIdx == -1) return -1;
+        counts[maxIdx]--;
+        if (counts[maxIdx] > 0) {
+            valid[maxIdx] = index + k;
+        }
+        return maxIdx;
+    }
+}
