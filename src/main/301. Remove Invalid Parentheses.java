@@ -110,3 +110,79 @@ class Solution {
         }
     }
 }
+
+//bfs
+
+import java.util.*;
+
+//"()())()"
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+        List<String> res = new ArrayList<>();
+        ArrayDeque<Node> q1 = new ArrayDeque<>();
+        ArrayDeque<Node> q2 = new ArrayDeque<>();
+        q1.add(new Node(s, 0 , 0));
+
+        while (!q1.isEmpty()) {
+            Node node = q1.poll();
+            int count = 0;
+            boolean flag = true;
+            for (int i = node.beforeAlreadyMatchedIdx; i < node.str.length(); i++) {
+                if (node.str.charAt(i) == '(') count++;
+                else if (node.str.charAt(i) == ')') count--;
+                if (count < 0) {
+                    flag = false;
+                    for (int j = node.leastPossibleDeleteOpposite; j <= i; j++) {
+                        if (node.str.charAt(j) == ')' && (j == node.leastPossibleDeleteOpposite || node.str.charAt(j - 1) != ')')) {
+                            String temp = node.str.substring(0, j) + node.str.substring(j + 1);
+                            q1.add(new Node(temp, i, j));
+                        }
+                    }
+                    break;
+                }
+            }
+            if (flag) {
+                node.str = new StringBuilder(node.str).reverse().toString();
+                node.beforeAlreadyMatchedIdx = 0;
+                node.leastPossibleDeleteOpposite = 0;
+                q2.add(node);
+            }
+        }
+
+        while (!q2.isEmpty()) {
+            Node node = q2.poll();
+            int count = 0;
+            boolean flag = true;
+            for (int i = node.beforeAlreadyMatchedIdx; i < node.str.length(); i++) {
+                if (node.str.charAt(i) == ')') count++;
+                else if (node.str.charAt(i) == '(') count--;
+                if (count < 0) {
+                    flag = false;
+                    for (int j = node.leastPossibleDeleteOpposite; j <= i; j++) {
+                        if (node.str.charAt(j) == '(' && (j == node.leastPossibleDeleteOpposite|| node.str.charAt(j - 1) != '(')) {
+                            String temp = node.str.substring(0, j) + node.str.substring(j + 1);
+                            q2.add(new Node(temp, i, j));
+                        }
+                    }
+                    break;
+                }
+            }
+            if (flag) {
+                res.add(new StringBuilder(node.str).reverse().toString());
+            }
+        }
+
+        return res;
+    }
+
+    private static class Node{
+        String str;
+        int beforeAlreadyMatchedIdx;
+        int leastPossibleDeleteOpposite;
+        public Node(String str, int start, int last) {
+            this.str = str;
+            this.beforeAlreadyMatchedIdx = start;
+            this.leastPossibleDeleteOpposite = last;
+        }
+    }
+}
