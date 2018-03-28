@@ -1,93 +1,56 @@
+import java.util.ArrayDeque;
+import java.util.HashSet;
+
 class SnakeGame {
-    private LinkedList<int[]> q;
-    private Set<Integer> set;
-    private int m;
-    private int n;
+    private ArrayDeque<Integer> dq;
     private int[][] food;
-    private int idx;
+    private HashSet<Integer> visited;
+    private int currentFood;
+    private int n;//width
+    private int m; //height;
 
-    /** Initialize your data structure here.
-     @param width - screen width
-     @param height - screen height
-     @param food - A list of food positions
-     E.g food = [[1,1], [1,0]] means the first food is positioned at [1,1], the second is at [1,0]. */
     public SnakeGame(int width, int height, int[][] food) {
-        this.q = new LinkedList<>();
-        n = width;
-        m = height;
-
-        this.food = food;
-        idx = 0;
-
-        q.addLast(new int[]{0, 0});
-        set = new HashSet<>();
+       this.dq = new ArrayDeque<>();
+       this.food = food;
+       this.visited = new HashSet<>();
+       currentFood = 0;
+       n = width;
+       m = height;
+       dq.addLast(0);
     }
 
-    /** Moves the snake.
-     @param direction - 'U' = Up, 'L' = Left, 'R' = Right, 'D' = Down
-     @return The game's score after the move. Return -1 if game over.
-     Game over when snake crosses the screen boundary or bites its body. */
     public int move(String direction) {
-        int x = 0, y = 0;
-        int[] head;
-        switch(direction) {
-            case "U" :
-                head = q.peekLast();
-                x = head[0] - 1;
-                y = head[1];
-                if (x<0) {
-                    return -1;
-                }
+        int head = dq.peekLast();
+        int x = head/n, y = head % n;
+        switch (direction) {
+            case "U": x--;
                 break;
-            case "L" :
-                head = q.peekLast();
-                x = head[0];
-                y = head[1] - 1;
-                if (y<0) {
-                    return -1;
-                }
+            case "D": x++;
                 break;
-            case "R" :
-                head = q.peekLast(); 
-                x = head[0];
-                y = head[1] + 1;
-                if (y>=n) {
-                    return -1;
-                }
+            case "L": y--;
                 break;
-            case "D" :
-                head = q.peekLast();         
-                x = head[0] + 1;
-                y = head[1];
-                if (x>=m) {
-                    return -1;
-                }
+            case "R": y++;
                 break;
         }
+        if (x<0||x>=m||y<0||y>=n) return -1;
+        int newNode = x*n+y;
 
-        if (idx < food.length && food[idx][0] == x && food[idx][1] == y) { //eat food
-            q.add(new int[]{x, y});
-            set.add(x*n + y);
-            idx++;
-            return q.size() - 1;
+        //newNode is food
+        if (currentFood < food.length && food[currentFood][0] == x && food[currentFood][1] == y) {
+            dq.addLast(newNode);
+            visited.add(newNode);
+            currentFood++;
+            return dq.size() - 1;
         }
 
-        int[] out = q.pollFirst();//get head out
-        set.remove(out[0]*n + out[1]);
-        
-        if (set.contains(x*n+y)) {//if bites its body;
+        //newNode not food
+        visited.remove(dq.pollFirst());
+
+        if (visited.contains(newNode)) {
             return -1;
         }
-        
-        set.add(x*n+y);//add head
-        q.addLast(new int[]{x, y});//add new head;
-
-        return q.size() - 1;
+        visited.add(newNode);
+        dq.add(newNode);
+        return dq.size() - 1;
     }
 }
-
-/**
- * Your SnakeGame object will be instantiated and called as such:
- * SnakeGame obj = new SnakeGame(width, height, food);
- * int param_1 = obj.move(direction);
- */
