@@ -11,7 +11,7 @@ class Solution {
             if (min1 == -1|| costs[0][j] < costs[0][min1]) {
                 min2 = min1;
                 min1 = j;
-            } else if (min2 == -1 || costs[0][j] < costs[0][min2]) {
+            } else if (min2 == -1 || costs[0][j] <= costs[0][min2]) {
                 min2 = j;
             }
         }
@@ -29,7 +29,7 @@ class Solution {
                 if (min1 == -1|| array[j] < array[min1]) {
                     min2 = min1;
                     min1 = j;
-                } else if (min2 == -1 || array[j] < array[min2]) {
+                } else if (min2 == -1 || array[j] <= array[min2]) {
                     min2 = j;
                 }
             }
