@@ -1,4 +1,3 @@
-128. Longest Consecutive Sequence
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ class Solution {
             if (high != null) {
                 map.put(nums[i] + high, total);
             }
-            max = Math.max(max, map.get(nums[i]));
+            max = Math.max(max, total);
         }
         return max;
     }
