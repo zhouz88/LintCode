@@ -1,17 +1,15 @@
+//dfs
 class Solution {
     void dfs(char[][] grid, int r, int c) {
         int nr = grid.length;
         int nc = grid[0].length;
-
-        if (r < 0 || c < 0 || r >= nr || c >= nc || grid[r][c] != '1') {
-            return;
+        if (r >= 0 && c >= 0 && r < nr && c < nc && grid[r][c] == '1') {
+            grid[r][c] = '?';
+            dfs(grid, r - 1, c);
+            dfs(grid, r + 1, c);
+            dfs(grid, r, c - 1);
+            dfs(grid, r, c + 1);
         }
-
-        grid[r][c] = '?';//dfs 记录搜索树的路径， 回溯法不记录路径
-        dfs(grid, r - 1, c);
-        dfs(grid, r + 1, c);
-        dfs(grid, r, c - 1);
-        dfs(grid, r, c + 1);
     }
 
     public int numIslands(char[][] grid) {
