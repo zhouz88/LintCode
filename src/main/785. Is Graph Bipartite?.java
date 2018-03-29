@@ -1,6 +1,3 @@
-import java.util.LinkedList;
-import java.util.Queue;
-
 class Solution {
     public boolean isBipartite(int[][] graph) {
         int[] level = new int[graph.length];
@@ -14,7 +11,7 @@ class Solution {
                 for (int k : graph[node]) {
                     if (level[k] == 0) {
                         q.add(k);
-                        level[k] = 1 - level[node];
+                        level[k] = -1 * level[node];
                     } else {
                         if (level[k] == level[node]) {
                             return false;
