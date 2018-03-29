@@ -1,12 +1,10 @@
- //input "A1B2"
+ //input "A, 1, B, 2, c, 3"
 class Solution {
     public List<String> letterCasePermutation(String S) {
         char[] t = S.toCharArray();
         List<String> ret = new ArrayList<>();
-        ret.add(S.toLowerCase());
         update(ret, 0, t);
-        System.out.println(Arrays.toString(t));
-        //[A, 1, B, 2] 最后一步带有回溯 最终的t 不变
+     //[A, 1, B, 2, c, 3] 带有回溯 最后的t
         return ret;
     }
 
@@ -15,13 +13,12 @@ class Solution {
             i++;
         }
         if (i == t.length) {
+            ret.add(new String(t));
             return;
         }
         char tmp = t[i];
         t[i] = Character.toUpperCase(t[i]);
-        ret.add(new String(t));
         update(ret, i + 1, t);
-        
         t[i] = Character.toLowerCase((t[i]));
         update(ret, i + 1, t);
         t[i] = tmp;
@@ -32,10 +29,8 @@ class Solution {
     public List<String> letterCasePermutation(String S) {
         char[] t = S.toCharArray();
         List<String> ret = new ArrayList<>();
-        ret.add(S.toLowerCase());
         update(ret, 0, t);
-        System.out.println(Arrays.toString(t));
-        //[a, 1, b, 2] t改变
+     //[a, 1, b, 2, c, 3] 不带回溯最终状态
         return ret;
     }
 
@@ -44,13 +39,12 @@ class Solution {
             i++;
         }
         if (i == t.length) {
+            ret.add(new String(t));
             return;
         }
-        char tmp = t[i];
+       // char tmp = t[i];
         t[i] = Character.toUpperCase(t[i]);
-        ret.add(new String(t));
         update(ret, i + 1, t);
-        
         t[i] = Character.toLowerCase((t[i]));
         update(ret, i + 1, t);
         //t[i] = tmp;
