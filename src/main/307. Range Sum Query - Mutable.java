@@ -97,3 +97,79 @@ public class NumMatrix {
         return total;
     }
 }
+
+class NumArray {
+    private TreeNode root;
+    
+    public NumArray(int[] nums) {
+        int n = nums.length;
+        root = buildTree(0, n - 1);
+        
+        for (int i = 0; i < n; i++) {
+            update(root, nums[i], i);
+        }
+    }
+
+    private TreeNode buildTree(int start, int end) {
+        if (start > end) {
+            return null;
+        }
+        if (start == end) {
+            return new TreeNode(start, start);
+        }
+        int mid = (start + end)/2;
+        TreeNode root = new TreeNode(start, end);
+        root.left = buildTree(start, mid);
+        root.right = buildTree(mid + 1, end);
+        return root;
+    }
+
+    private void update(TreeNode root, int val, int idx) {
+        if (root.start ==  idx && root.end == idx) {
+            root.sum = val;
+            return;
+        }
+        int mid = (root.end - root.start)/2 + root.start;
+        if (idx <= mid) {
+            update(root.left, val, idx);
+        } else {
+            update(root.right, val, idx);
+        }
+        root.sum = root.left.sum + root.right.sum;
+    }
+
+    public void update(int i, int val) {
+        update(root, val, i);
+    }
+
+    public int sumRange(int i, int j) {
+        return sumRange(root, i, j);
+    }
+
+    private int sumRange(TreeNode root, int start, int end) {
+        if (root.start == start && root.end == end) {
+            return root.sum;
+        }
+        int mid = (root.end - root.start)/2 + root.start;
+        if (start <= mid) {
+            if (end <= mid) {
+                return sumRange(root.left, start, end);
+            } else {
+                return sumRange(root.left, start, mid) + sumRange(root.right, mid + 1, end);
+            }
+        } else {
+            return sumRange(root.right, start, end);
+        }
+    }
+
+    private static class TreeNode {
+        int start;
+        int end;
+        int sum;
+        TreeNode left, right;
+        public TreeNode(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+}
