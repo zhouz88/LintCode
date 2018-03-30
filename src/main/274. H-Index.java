@@ -70,6 +70,27 @@ class Solution {
         return citations.length - l;
     }
 }
+
+//counting sort
+import java.util.Arrays;
+
+class Solution {
+    public int hIndex(int[] citations) {
+        int[] counts = new int[citations.length + 1];
+        for (int k : citations) {
+            if (k >= citations.length) counts[citations.length]++;
+            else counts[k]++;
+        }
+        int sum = 0;
+        for (int i = counts.length - 1; i >= 0; i--) {
+            sum += counts[i];
+            if (sum >= i) {
+                return i;
+            }
+        }
+        return 0;
+    }
+}
 /*
 275. H-Index II
 DescriptionHintsSubmissionsDiscussSolution
