@@ -1,45 +1,21 @@
+import java.util.Arrays;
+
+//quick sort
 public class Solution {
     public int hIndex(int[] citations) {
         // sorting the citations in ascending order
-         Arrays.sort(citations); 
-    for (int i = 0; i< citations.length; i++){       
-        if ( citations[i] >= (citations.length - i)){
-            return citations.length - i;
-        }
-    }
-    
-    return 0; 
-    }
-}
-    ///
-    
-    */
-cclass Solution {
-    public int hIndex(int[] citations) {
-        int l = 0, r = citations.length;
-        while (l <= r) {
-            int mid = ((r - l) >> 1) + l;
-            if (check(mid, citations) >= mid) {
-                l = mid + 1;
-            } else {
-                r = mid - 1;
+        Arrays.sort(citations);
+        for (int i = 0; i< citations.length; i++){
+            if ( citations[i] >= (citations.length - i)){
+                return citations.length - i;
             }
         }
-        return r;
-    }
 
-    private int check(int mid, int[] citations) {
-        int cnt = 0;
-        for (int num:citations) {
-            if (num >= mid) {
-                cnt++;
-            }
-        }
-        return cnt;
+        return 0;
     }
 }
 
-
+//binary search
 class Solution {
     public int hIndex(int[] citations) {
         int l = 0, r = citations.length;
@@ -99,6 +75,7 @@ Seen this question in a real interview before?  YesNo
 
 
 */
+
 class Solution {
     public int hIndex(int[] citations) {
         int len = citations.length;
