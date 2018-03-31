@@ -34,6 +34,10 @@ public class Solution{
         boolean[][] visited = new boolean[matrix.length][matrix[0].length];
         visited[0][0] = true;
         dfs(0, 0, matrix, visited, 1, 0);
+        System.out.println(robot.dirX + ":" + robot.dirY);
+        for (boolean[] dir : cleanMap) {
+            System.out.println(Arrays.toString(dir));
+        }
     }
 
     private boolean move() {
@@ -100,8 +104,8 @@ public class Solution{
             int y = dir[1] + j;
             if (x>=0&&y>=0&&x<matrix.length&&y<matrix[0].length&&matrix[x][y]==0&&!visited[x][y]) {
                 visited[x][y] = true;
-                clean();
                 move();
+                clean();//bug 1 move clean 反向了！
                 dfs(x, y, matrix, visited, dir[0], dir[1]);
                 int[] back = {-dir[0], -dir[1]};
                 turn(dir, back);
@@ -143,14 +147,13 @@ public class Solution{
 
     public static void main(String[] args) {
         int[][] matrix = {
-                {0 ,1 ,0 ,0 ,0},
-                {0, 1 ,0 ,1, 0},
-                {0 ,1 ,0 ,1, 1},
+                {0 ,0 ,0 ,0 ,0},
+                {1, 0 ,0 ,1, 0},
+                {0 ,0 ,0 ,1, 1},
                 {0 ,0, 0, 0 ,0},
                 {0 ,1 ,0, 0 ,1 },
         };
         Solution s = new Solution(matrix);
         s.doIt();
-
     }
 }
