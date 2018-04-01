@@ -1,12 +1,12 @@
 import java.util.*;
 
-public class Solution{
+public class Solution {
     private static class Robot {
         int x;
         int y;
         int dirX;
         int dirY;
-        private HashSet<String> set = new HashSet<>();
+
         public Robot(int x, int y, int dirX, int dirY) {
             this.x = x;
             this.y = y;
@@ -18,6 +18,7 @@ public class Solution{
     private int[][] matrix;
     private Robot robot;
     private boolean[][] cleanMap;
+    private HashSet<String> set = new HashSet<>();
 
     public Solution(int[][] matrix) {
         this.matrix = matrix;
@@ -31,18 +32,29 @@ public class Solution{
 
     public void doIt() {
         clean();
-        robot.set.add(0 + " " + 0);
-        dfs(0, 0, matrix,  1, 0);
+        set.add(0 + " " + 0);
+        dfs(0, 0, matrix, 1, 0);
         System.out.println(robot.dirX + ":" + robot.dirY);
         for (boolean[] dir : cleanMap) {
             System.out.println(Arrays.toString(dir));
         }
     }
 
+    private boolean cleanNewGrid() {
+        int a = robot.x + robot.dirX;
+        int b = robot.y + robot.dirY;
+        if (!set.contains(a + " " + b) && move()){
+            set.add(a + " " + b);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private boolean move() {
         int a = robot.x + robot.dirX;
         int b = robot.y + robot.dirY;
-        if (a<0||b<0||a>=matrix.length||b>=matrix[0].length||matrix[a][b]==1||robot.set.contains(a + " " + b)) {
+        if (a < 0 || b < 0 || a >= matrix.length || b >= matrix[0].length || matrix[a][b] == 1) {
             return false;
         } else {
             int[][] out = new int[matrix.length][matrix[0].length];
@@ -54,7 +66,6 @@ public class Solution{
             robot.x += robot.dirX;
             robot.y += robot.dirY;
             out[robot.x][robot.y] = 3;
-            robot.set.add(a + " " + b);
             for (int[] dir : out) {
                 System.out.println(Arrays.toString(dir));
             }
@@ -69,7 +80,7 @@ public class Solution{
         index += n;
         index %= 4;
         for (Map.Entry<String, Integer> e : map.entrySet()) {
-            if (e.getValue() == index){
+            if (e.getValue() == index) {
                 String start = e.getKey();
                 String[] t = start.split(" ");
                 robot.dirX = Integer.parseInt(t[0]);
@@ -81,9 +92,9 @@ public class Solution{
     private void turnLeft(int n) {
         String d = robot.dirX + " " + robot.dirY;
         int index = map.get(d);
-        index = (index + 4 -  n)%4;
+        index = (index + 4 - n) % 4;
         for (Map.Entry<String, Integer> e : map.entrySet()) {
-            if (e.getValue() == index){
+            if (e.getValue() == index) {
                 String start = e.getKey();
                 String[] t = start.split(" ");
                 robot.dirX = Integer.parseInt(t[0]);
@@ -96,18 +107,18 @@ public class Solution{
         cleanMap[robot.x][robot.y] = true;
     }
 
-    public void dfs(int i, int j, int[][] matrix, int X,int Y) {
+    public void dfs(int i, int j, int[][] matrix, int X, int Y) {
         int[] origin = new int[]{X, Y};
         for (int[] dir : DIRECTIONS) {
-            turn(origin, dir);
+            turn(origin, dir); // 
             int x = dir[0] + i;
             int y = dir[1] + j;
-            if (move()) {
+            if (cleanNewGrid()) {
                 clean();//bug 1 move clean 反向了！
                 dfs(x, y, matrix, dir[0], dir[1]);
-                int[] back = {-dir[0], -dir[1]};
+                int[] back = {-dir[0], -dir[1]};//rotateRight(2);
                 turn(dir, back);
-                backToOrigin(back);
+                move();
                 turn(back, origin);
             } else {
                 turn(dir, origin);
@@ -120,7 +131,7 @@ public class Solution{
         robot.y += robot.dirY;
     }
 
-    private static final int[][] DIRECTIONS = {{1, 0},{0, -1},{-1, 0},{0, 1}};
+    private static final int[][] DIRECTIONS = {{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
     private static Map<String, Integer> map = new HashMap<>();
 
     public void cleanRoom(int[][] matrix) {
@@ -148,11 +159,11 @@ public class Solution{
 
     public static void main(String[] args) {
         int[][] matrix = {
-                {0 ,0 ,0 ,0 ,0},
-                {1, 0 ,0 ,1, 0},
-                {0 ,0 ,0 ,1, 1},
-                {0 ,0, 0, 0 ,0},
-                {0 ,1 ,0, 0 ,1 },
+                {0, 0, 0, 0, 0},
+                {1, 0, 0, 1, 0},
+                {0, 0, 1, 1, 1},
+                {0, 0, 0, 0, 0},
+                {0, 1, 0, 1, 1},
         };
         Solution s = new Solution(matrix);
         s.doIt();
