@@ -1,6 +1,4 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Solution{
     private static class Robot {
@@ -8,6 +6,7 @@ public class Solution{
         int y;
         int dirX;
         int dirY;
+        private HashSet<String> set = new HashSet<>();
         public Robot(int x, int y, int dirX, int dirY) {
             this.x = x;
             this.y = y;
@@ -15,6 +14,7 @@ public class Solution{
             this.dirY = dirY;
         }
     }
+
     private int[][] matrix;
     private Robot robot;
     private boolean[][] cleanMap;
@@ -31,9 +31,8 @@ public class Solution{
 
     public void doIt() {
         clean();
-        boolean[][] visited = new boolean[matrix.length][matrix[0].length];
-        visited[0][0] = true;
-        dfs(0, 0, matrix, visited, 1, 0);
+        robot.set.add(0 + " " + 0);
+        dfs(0, 0, matrix,  1, 0);
         System.out.println(robot.dirX + ":" + robot.dirY);
         for (boolean[] dir : cleanMap) {
             System.out.println(Arrays.toString(dir));
@@ -43,7 +42,7 @@ public class Solution{
     private boolean move() {
         int a = robot.x + robot.dirX;
         int b = robot.y + robot.dirY;
-        if (a<0||b<0||a>=matrix.length||b>=matrix[0].length||matrix[a][b]==1) {
+        if (a<0||b<0||a>=matrix.length||b>=matrix[0].length||matrix[a][b]==1||robot.set.contains(a + " " + b)) {
             return false;
         } else {
             int[][] out = new int[matrix.length][matrix[0].length];
@@ -55,6 +54,7 @@ public class Solution{
             robot.x += robot.dirX;
             robot.y += robot.dirY;
             out[robot.x][robot.y] = 3;
+            robot.set.add(a + " " + b);
             for (int[] dir : out) {
                 System.out.println(Arrays.toString(dir));
             }
@@ -93,23 +93,21 @@ public class Solution{
     }
 
     private void clean() {
-       cleanMap[robot.x][robot.y] = true;
+        cleanMap[robot.x][robot.y] = true;
     }
 
-    public void dfs(int i, int j, int[][] matrix, boolean[][] visited, int X,int Y) {
+    public void dfs(int i, int j, int[][] matrix, int X,int Y) {
         int[] origin = new int[]{X, Y};
         for (int[] dir : DIRECTIONS) {
             turn(origin, dir);
             int x = dir[0] + i;
             int y = dir[1] + j;
-            if (x>=0&&y>=0&&x<matrix.length&&y<matrix[0].length&&matrix[x][y]==0&&!visited[x][y]) {
-                visited[x][y] = true;
-                move();
+            if (move()) {
                 clean();//bug 1 move clean 反向了！
-                dfs(x, y, matrix, visited, dir[0], dir[1]);
+                dfs(x, y, matrix, dir[0], dir[1]);
                 int[] back = {-dir[0], -dir[1]};
                 turn(dir, back);
-                move();
+                backToOrigin(back);
                 turn(back, origin);
             } else {
                 turn(dir, origin);
@@ -117,13 +115,16 @@ public class Solution{
         }
     }
 
+    private void backToOrigin(int[] back) {
+        robot.x += robot.dirX;
+        robot.y += robot.dirY;
+    }
+
     private static final int[][] DIRECTIONS = {{1, 0},{0, -1},{-1, 0},{0, 1}};
     private static Map<String, Integer> map = new HashMap<>();
 
     public void cleanRoom(int[][] matrix) {
-        boolean[][] visited = new boolean[matrix.length][matrix[0].length];
-        visited[0][0] = true;
-        dfs(0, 0, matrix, visited, 0, 0);
+        dfs(0, 0, matrix, 1, 0);
     }
 
     public void turn(int[] first, int[] next) {
@@ -132,7 +133,7 @@ public class Solution{
         if (s == f) return;
         if (f < s) {
             if (s - f <= Math.abs(4 - (s - f))) {
-               turnRight(s - f);
+                turnRight(s - f);
             } else {
                 turnLeft(4 - (s - f));
             }
