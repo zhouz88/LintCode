@@ -1,35 +1,33 @@
 class Solution {
     public int[] findRedundantDirectedConnection(int[][] edges) {
-        int[] can1 = {-1, -1};
-        int[] can2 = {-1, -1};
-        int[] f = new int[edges.length + 1];
-
-        for (int i = 0; i < edges.length; i++) {
-            if (f[edges[i][1]] == 0) {
-                f[edges[i][1]] = edges[i][0];
+        int[] can1 = new int[]{-1, -1};
+        int[] can2 = new int[]{-1, -1};
+        int n = edges.length;
+        int[] f = new int[n + 1];
+        for (int[] e : edges) {
+            if (f[e[1]] == 0) {
+                f[e[1]] = e[0];
             } else {
-                can2 = new int[] {edges[i][0], edges[i][1]};
-                can1 = new int[] {f[edges[i][1]], edges[i][1]};
-                edges[i][1] = 0;
+                can1 = new int[]{f[e[1]], e[1]};
+                can2 = new int[]{e[0], e[1]};
+                e[1] = 0;
             }
         }
-
-        for (int i = 0; i < f.length; i++) {
+        for (int i = 0; i < n; i++) {
             f[i] = i;
         }
-
-        for (int i = 0; i < edges.length; i++) {
-            if (edges[i][1] == 0) {
+        for (int[] e : edges) {
+            if (e[1] == 0) {
                 continue;
             }
-            int child = edges[i][1], father = edges[i][0];
-            if (find(f, father) == child) {
+            int fa = find(f, e[0]);
+            if (fa == e[1]) {
                 if (can1[0] == -1) {
-                    return edges[i];
+                    return e;
                 }
                 return can1;
             }
-            f[child] = father;
+            f[e[1]] = fa;
         }
         return can2;
     }
