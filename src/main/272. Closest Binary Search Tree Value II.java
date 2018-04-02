@@ -2,81 +2,92 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
 class Solution {
     public List<Integer> closestKValues(TreeNode root, double target, int k) {
         List<Integer> res = new ArrayList<>();
-        Stack<TreeNode> lStack = new Stack<>();
-        Stack<TreeNode> rStack = new Stack<>();
-        fillSmaller(lStack, root, target);
-        fillBigger(rStack, root, target);
-
-        if (!lStack.isEmpty() && !rStack.isEmpty() && lStack.peek() == rStack.peek()) {
-            add(res, lStack, false);
-            res.remove(res.size() - 1);
+        Stack<TreeNode> leftStack = new Stack<>();
+        Stack<TreeNode> rightStack = new Stack<>();
+        fillLeft(leftStack, root, target);
+        fillRight(rightStack, root, target);
+        if (!leftStack.isEmpty() && !rightStack.isEmpty() && leftStack.peek() == rightStack.peek()) {
+            TreeNode node = leftStack.pop();
+            addLeft(node, leftStack);
         }
-
         while (k-- > 0) {
-            if (lStack.isEmpty() && rStack.isEmpty()) {
-                break;
-            } else if (lStack.isEmpty()) {
-                add(res, rStack, true);
-            } else if (rStack.isEmpty()) {
-                add(res, lStack, false);
-            } else {
-                double r = 1.0*((rStack.peek().val) - target);
-                double l = 1.0*(target - (lStack.peek().val));
-                if (l < r) {
-                    add(res, lStack, false);
+            if (!leftStack.isEmpty() && !rightStack.isEmpty()) {
+                if (target - leftStack.peek().val < rightStack.peek().val - target) {
+                    res.add(leftStack.peek().val);
+                    TreeNode node = leftStack.pop();
+                    addLeft(node, leftStack);
                 } else {
-                    add(res, rStack, true);
+                    res.add(rightStack.peek().val);
+                    TreeNode node = rightStack.pop();
+                    addRight(node, rightStack);
                 }
+            } else if (!leftStack.isEmpty()) {
+                res.add(leftStack.peek().val);
+                TreeNode node = leftStack.pop();
+                addLeft(node, leftStack);
+            } else if (!rightStack.isEmpty()) {
+                res.add(rightStack.peek().val);
+                TreeNode node = rightStack.pop();
+                addRight(node, rightStack);
+            } else {
+                break;
             }
         }
         return res;
     }
 
-    private void add(List<Integer> res, Stack<TreeNode> stack, boolean isR) {
-        TreeNode node = stack.pop();
-        res.add(node.val);
-        if (isR) {
-            node = node.right;
-        } else {
-            node = node.left;
-        }
+    private void addLeft(TreeNode node, Stack<TreeNode> stack) {
+        node = node.left;
         while (node != null) {
             stack.add(node);
-            if (isR) {
-                node = node.left;
-            } else {
-                node = node.right;
-            }
+            node = node.right;
         }
     }
 
-    private void fillBigger(Stack<TreeNode> rStack, TreeNode root, double target) {
+    private void addRight(TreeNode node, Stack<TreeNode> stack) {
+        node = node.right;
+        while (node != null) {
+            stack.add(node);
+            node = node.left;
+        }
+    }
+
+    private void fillRight(Stack<TreeNode> rightStack, TreeNode root, double target) {
         while (root != null) {
-            if (root.val > target) {
-                rStack.add(root);
-                root = root.left;
+            if (root.val == target) {
+                rightStack.add(root);
+                break;
             } else if (root.val < target) {
                 root = root.right;
             } else {
-                rStack.add(root);
-                break;
+                rightStack.add(root);
+                root = root.left;
             }
         }
     }
 
-    private void fillSmaller(Stack<TreeNode> lStack, TreeNode root, double target) {
+    private void fillLeft(Stack<TreeNode> leftStack, TreeNode root, double target) {
         while (root != null) {
-            if (root.val < target) {
-                lStack.add(root);
-                root = root.right;
+            if (root.val == target) {
+                leftStack.add(root);
+                break;
             } else if (root.val > target) {
                 root = root.left;
             } else {
-                lStack.add(root);
-                break;
+                leftStack.add(root);
+                root = root.right;
             }
         }
     }
