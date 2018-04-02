@@ -1,11 +1,3 @@
-270. Closest Binary Search Tree Value
-DescriptionHintsSubmissionsDiscussSolution
-DiscussPick One
-Given a non-empty binary search tree and a target value, find the value in the BST that is closest to the target.
-
-Note:
-Given target value is a floating point.
-You are guaranteed to have only one unique value in the BST that is closest to the target.
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -17,43 +9,21 @@ You are guaranteed to have only one unique value in the BST that is closest to t
  */
 class Solution {
     public int closestValue(TreeNode root, double target) {
-        if (root == null) {
-            return 0;
+        double res = Double.POSITIVE_INFINITY;
+        int ret = 0;
+        while (root != null) {
+            if (Math.abs(root.val - target) < res) {
+                res = Math.abs(root.val - target);
+                ret = root.val;
+            }
+            if (root.val < target) {
+                root = root.right;
+            } else if (root.val > target) {
+                root = root.left;
+            } else if (root.val - target == 0) {
+                return root.val;
+            }
         }
-        return getcloset(root, target, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-    }
-
-    private int getcloset(TreeNode root, double target, double a, double b) {
-        if (root == null) {
-            return target - a > b - target ? (int)b : (int)a;
-        } 
-        if ((double)root.val == target) {
-            return root.val;
-        }
-        
-        if (root.val < target) {
-            return getcloset(root.right, target, root.val, b);
-        } else {
-            return getcloset(root.left, target, a, root.val);
-        }
-        
-    }
-}
-
-//method 2
-class Solution {
-    public int closestValue(TreeNode root, double target) {
-        int val = root.val;
-        TreeNode n = null;
-        if (root.val > target) {
-            n = root.left;
-        } else {
-            n = root.right;
-        }
-        if (n == null) {
-            return root;
-        }
-        int tar = closestValue(n, target);
-        return Math.abs(tar - target) > Math.abs(val - target) ? val : tar;
+        return ret;
     }
 }
