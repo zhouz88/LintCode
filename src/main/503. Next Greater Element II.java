@@ -1,29 +1,24 @@
-import java.util.ArrayList;
 import java.util.Stack;
 
 class Solution {
     public int[] nextGreaterElements(int[] nums) {
-        int[] res = new int[nums.length];
-        int[] ret = new int[nums.length *2];
-        for (int i = 0; i < nums.length; i++) {
-            ret[i] = nums[i];
-            ret[nums.length + i] = nums[i];
+        int idx = 0;
+        int[] ret = new int[nums.length];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = nums.length - 1; i>=0;i--) {
+            stack.add(i);
         }
-        Stack<Integer> stk = new Stack<>();
-        for (int i = ret.length - 1; i >= nums.length ; i--) {
-            stk.add(i);
-        }
-        for (int i = nums.length - 1; i >= 0 ; i--) {
-            while (!stk.isEmpty() && ret[stk.peek()] <= nums[i]) {
-                stk.pop();
+        for (int i = nums.length -1; i>=0; i--) {
+            while (!stack.isEmpty() && nums[stack.peek()] <= nums[i]) {
+                stack.pop();
             }
-            if (stk.isEmpty()) {
-                res[i] = -1; 
+            if (stack.isEmpty()) {
+                ret[i] = -1;
             } else {
-                res[i] = ret[stk.peek()];
+                ret[i] = nums[stack.peek()];
             }
-            stk.add(i);
+            stack.add(i);
         }
-        return res;
+        return ret;
     }
 }
