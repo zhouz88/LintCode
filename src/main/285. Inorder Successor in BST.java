@@ -29,3 +29,35 @@ class Solution {
         
     }
 }
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        int val = p.val + 1;
+        TreeNode cur = root;
+        TreeNode res = null;
+        int min = Integer.MAX_VALUE;
+        while (cur != null) {
+            if (cur.val > val && cur.val - val < min) {
+                res = cur;
+                min = cur.val - val;
+            }
+            if (cur.val == val) {
+                return cur;
+            } else if (cur.val > val) {
+                cur = cur.left;
+            } else {
+                cur = cur.right;
+            }
+        }
+        return res;
+    }
+}
