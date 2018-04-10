@@ -57,3 +57,48 @@ class Solution {
         
     }
 }
+
+//dfs
+class Solution {
+    public List<int[]> pacificAtlantic(int[][] matrix) {
+        List<int[]> res = new ArrayList<>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return res;
+        }
+        int m = matrix.length, n = matrix[0].length;
+        boolean[][] pacific = new boolean[m][n];
+        final int[][] directions = {{1, 0},{0, 1},{-1, 0},{0, -1}};
+        boolean[][] atlantic = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            pacific[i][0] = true;
+            atlantic[i][n - 1] = true;
+            dfs(pacific, i, 0, matrix, directions);
+            dfs(atlantic, i, n - 1, matrix, directions);
+        }
+        for (int j = 0; j < n; j++) {
+            pacific[0][j] = true;
+            atlantic[m - 1][j] = true;
+            dfs(pacific, 0, j, matrix, directions);
+            dfs(atlantic, m-1, j, matrix, directions);
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (atlantic[i][j]&&pacific[i][j]) {
+                    res.add(new int[]{i, j});
+                }
+            }
+        }
+        return res;
+    }
+
+    private void dfs(boolean[][] pacific, int startI, int startJ, int[][] matrix, int[][] directions) {
+        for (int[] dir : directions) {
+            int x = dir[0] + startI;
+            int y = dir[1] + startJ;
+            if (x>=0&&y>=0&&x<matrix.length&&y<matrix[0].length&&!pacific[x][y]&&matrix[x][y]>=matrix[startI][startJ]) {
+                pacific[x][y]=true;
+                dfs(pacific,x,y,matrix,directions);
+            }
+        }
+    }
+}
