@@ -1,110 +1,55 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
     public boolean judgePoint24(int[] nums) {
-        double[][][] res = new double[4][4][6];
-        Map<Node, Node> map = new HashMap<>();
-
-        map.put(new Node(0, 1), new Node(2, 3));
-        map.put(new Node(0, 2), new Node(1, 3));
-        map.put(new Node(0, 3), new Node(1, 2));
-        map.put(new Node(1, 2), new Node(0, 3));
-        map.put(new Node(1, 3), new Node(0, 2));
-        map.put(new Node(2, 3), new Node(0, 1));
-
-        for (int i = 0; i < 4; i++) {
-            for (int j = i + 1; j < 4; j++) {
-                double first = nums[i];
-                double second = nums[j];
-                res[i][j][0] = first + second;
-                res[i][j][1] = first * second;
-                res[i][j][2] = first - second;
-                res[i][j][3] = - (first - second);
-                res[i][j][4] = first / second;
-                res[i][j][5] = second / first;
-            }
+        List<Double> list = new ArrayList<>();
+        for (int i = 0; i < nums.length ; i++) {
+            list.add(1.0*nums[i]);
         }
-        for (int i = 0; i < 4; i++) {
-            for (int j = i + 1; j < 4; j++) {
-                double[] a = res[i][j];
-                Node tmp = map.get(new Node(i, j));
-                double[] b = res[tmp.x][tmp.y];
-                for (double x : a) {
-                    for (double y : b) {
-                        if (ok(x, y)) {
-                            return true;
-                        }
-                    }
-                }
-                for (int k = 0; k < 6; k++) {
-                    double[] array = new double[6];
-                    array[0] = a[k] + nums[tmp.x];
-                    array[1] = a[k] - nums[tmp.x];
-                    array[2] = a[k] * nums[tmp.x];
-                    array[3] = a[k] / nums[tmp.x];
-                    array[4] = -(a[k] - nums[tmp.x]);
-                    array[5] = nums[tmp.x] / a[k];
-                    for (double t : array) {
-                        if (ok(t, nums[tmp.y])) {
-                            return true;
-                        }
-                    }
-                }
+        return solve(list);
+    }
 
-                for (int k = 0; k < 6; k++) {
-                    double[] array = new double[6];
-                    array[0] = a[k] + nums[tmp.y];
-                    array[1] = a[k] - nums[tmp.y];
-                    array[2] = a[k] * nums[tmp.y];
-                    array[3] = a[k] / nums[tmp.y];
-                    array[4] = -(a[k] - nums[tmp.y]);
-                    array[5] = nums[tmp.y] / a[k];
-                    for (double t : array) {
-                        if (ok(t, nums[tmp.x])) {
-                            return true;
-                        }
-                    }
+    private boolean solve(List<Double> list) {
+        if (list.size() == 1) {
+            if (Math.abs(list.get(0) - 24) < 1e-6) return true;
+            else return false;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < list.size(); j++) {
+                if (i == j) continue;
+                List<Double> next = new ArrayList<>();
+                for (int k = 0; k < list.size(); k++) {
+                    if (k != i && k != j) next.add(list.get(k));
                 }
-
+                double first = list.get(i) + list.get(j);
+                double second = list.get(i) - list.get(j);
+                double third = list.get(i) * list.get(j);
+                Double forth = list.get(j) == 0 ? null : list.get(i)/list.get(j);
+                next.add(first);
+                if (solve(next)) {
+                    return true;
+                }
+                next.remove(next.size() - 1);
+                next.add(second);
+                if (solve(next)) {
+                    return true;
+                }
+                next.remove(next.size() - 1);
+                next.add(third);
+                if (solve(next)) {
+                    return true;
+                }
+                next.remove(next.size() - 1);
+                if (forth != null) {
+                    next.add(forth);
+                    if (solve(next)) {
+                        return true;
+                    }
+                    next.remove(next.size() - 1);
+                }
             }
         }
         return false;
-    }
-
-    private boolean ok(double x, double y) {
-        double a = x + y;
-        double b = x - y;
-        double c = x * y;
-        double d = x / y;
-        double e = y / x;
-        double f = y - x;
-        return ok1(a) || ok1(b) || ok1(c) ||ok1(d) ||ok1(e) ||ok1(f) ;
-    }
-
-    private boolean ok1(double a) {
-        return Math.abs(a - 24.0) <= 1e-3;
-    }
-
-
-    private static class Node {
-        int x;
-        int y;
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public int hashCode() {
-            return 10 * x + y;
-        }
-
-        public boolean equals(Object o) {
-            if ( o instanceof Node) {
-                Node t = (Node)o;
-                return t.x == x && t.y == y;
-            }
-            return false;
-        }
     }
 }
