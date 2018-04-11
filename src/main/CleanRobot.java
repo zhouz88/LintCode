@@ -108,9 +108,10 @@ public class Solution {
     }
 
     public void dfs(int i, int j, int[][] matrix, int X, int Y) {
-        int[] origin = new int[]{X, Y};
+        int[] last = new int[]{X, Y};
+        int[] origin = last;
         for (int[] dir : DIRECTIONS) {
-            turn(origin, dir); // 
+            turn(last, dir); //
             int x = dir[0] + i;
             int y = dir[1] + j;
             if (cleanNewGrid()) {
@@ -119,11 +120,12 @@ public class Solution {
                 int[] back = {-dir[0], -dir[1]};//rotateRight(2);
                 turn(dir, back);
                 move();
-                turn(back, origin);
+                last = back;
             } else {
-                turn(dir, origin);
+                last = dir;
             }
         }
+        turn(last, origin);
     }
 
     private void backToOrigin(int[] back) {
