@@ -34,3 +34,31 @@ class Solution {
         }
     }
 }
+
+//
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        char[] t = new char[2 * n];
+        dfs(res, t, 0, 0);
+        return res;
+    }
+
+    private void dfs(List<String> res, char[] t, int cntL, int cntR) {
+        if (cntL + cntR == t.length) {
+            res.add(new String(t));
+            return;
+        }
+        if (cntL < t.length/2) {
+            t[cntL + cntR] = '(';
+            dfs(res, t, cntL + 1, cntR);
+        }
+        if (cntR < cntL) {
+            t[cntL + cntR] = ')';
+            dfs(res, t, cntL, cntR + 1);
+        }
+    }
+}
