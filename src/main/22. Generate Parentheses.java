@@ -62,3 +62,38 @@ class Solution {
         }
     }
 }
+
+//bfs
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        LinkedList<String> q = new LinkedList<>();
+        LinkedList<Integer> leftNubmer = new LinkedList<>();
+        q.add("(");
+        leftNubmer.add(1);
+        int step = 1;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int z = 0; z < size; z++) {
+                String node = q.poll();
+                int left = leftNubmer.poll();
+                if (left >= node.length() - left && left < n) {
+                    q.add(node + "(");
+                    leftNubmer.add(left + 1);
+                }
+                if (left > node.length() - left) {
+                    q.add(node + ")");
+                    leftNubmer.add(left);
+                }
+            }
+            step++;
+            if (step == 2 * n) break;
+        }
+        return q;
+    }
+}
