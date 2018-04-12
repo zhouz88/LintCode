@@ -4,34 +4,21 @@ import java.util.List;
 class Solution {
     public List<String> summaryRanges(int[] nums) {
         List<String> res = new ArrayList<>();
-        //edge case
-        if (nums == null || nums.length == 0) { //bug 1
-            return res;
-        }
-        if (nums.length == 1) {
-            res.add(""+nums[0]);
-            return res;
-        }
         int cnt = 1;
+        if (nums.length == 0) return res;
         for (int i = 1; i < nums.length; i++) {
-            if (nums[i] == nums[i - 1] + 1) { //bug 2
+            if (nums[i] == nums[i - 1] + 1) {// bug1
                 cnt++;
             } else {
-                if (cnt > 1) {
-                    int start = i - cnt;
-                    res.add(nums[start] + "->" + nums[i - 1]);//bug3 + bug4 + bug5
-                } else {
-                    res.add(""+nums[i - 1]);
-                }
+                int first = nums[i - cnt];
+                int second = nums[i - 1];
+                res.add(first == second ? ""+first: first + "->" + second);
                 cnt = 1;
             }
         }
-        if (cnt > 1) {
-            int start = nums.length - cnt;
-            res.add(nums[start] + "->" + nums[nums.length - 1]);
-        } else {
-            res.add(""+nums[nums.length - 1]);
-        }
+        int first = nums[nums.length - cnt];
+        int second = nums[nums.length - 1];
+        res.add(first == second ? ""+first: first + "->" + second);
         return res;
     }
 }
