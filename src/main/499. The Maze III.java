@@ -1,77 +1,59 @@
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 class Solution {
-    public String findShortestWay(int[][] maze, int[] start, int[] destination) {
+    public String findShortestWay(int[][] maze, int[] ball, int[] hole) {
         int m = maze.length, n = maze[0].length;
-        int[][] distance = new int[m][n];
-
-        for (int[] dis : distance) {
-            Arrays.fill(dis, Integer.MAX_VALUE);
-        }
-
-        distance[start[0]][start[1]] = 0;
-        Queue<int[]> q = new LinkedList<>();
-        q.add(start);
-
-        int max = Integer.MAX_VALUE;
-        final int[][] directions = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
         String[][] dp = new String[m][n];
-        dp[start[0]][start[1]] = "";
-
+        Queue<int[]> q = new LinkedList<>();
+        q.add(ball);
+        int[][] distance = new int[m][n];
+        for (int[] a : distance) Arrays.fill(a, Integer.MAX_VALUE);
+        distance[ball[0]][ball[1]] = 0;
+        dp[ball[0]][ball[1]]  = "";
+        int[][] directions = {{1,0},{-1,0},{0,1},{0,-1}};
+        String[] dirCharacters = {"d", "u", "r", "l"};
         while (!q.isEmpty()) {
             int[] node = q.poll();
-            for (int[] dir : directions) {
+            for (int i = 0; i < directions.length; i++) {
+                int[] dir = directions[i];
+                String direction = dirCharacters[i];
                 int x = node[0];
                 int y = node[1];
-                int total = 0;
-                if (x+dir[0]>=0&&y+dir[1]>=0&&x+dir[0]<m&&y+dir[1]<n&&maze[x+dir[0]][y+dir[1]]!=1) {
-                    boolean flag = false;
-                    while (x+dir[0]>=0&&y+dir[1]>=0&&x+dir[0]<m&&y+dir[1]<n&&maze[x+dir[0]][y+dir[1]]!=1) {
-                        total++;
-                        x += dir[0];
-                        y += dir[1];
-                        if (destination[0] == x && destination[1] == y) {
-                            flag = true;
-                            if (distance[node[0]][node[1]] + total < max) {
-                                char D = getUDLR(x, y, node[0], node[1]);
-                                dp[destination[0]][destination[1]] = dp[node[0]][node[1]] + D;
-                                max = distance[node[0]][node[1]] + total;
-                            } else if (distance[node[0]][node[1]] + total == max){
-                                char D = getUDLR(x, y, node[0], node[1]);
-                                String tmp = dp[node[0]][node[1]] + D;
-                                dp[destination[0]][destination[1]] = (tmp).compareTo(dp[destination[0]][destination[1]]) < 0 ? tmp : dp[destination[0]][destination[1]];
-                            }
+                int cnt = 0;
+                if (!inMaze(maze, x + dir[0], y + dir[1])) continue;
+                boolean hasHole = false;
+                while (inMaze(maze, x + dir[0], y + dir[1])) {
+                    x += dir[0];
+                    y += dir[1];
+                    cnt++;
+                    if (Arrays.equals(hole, new int[]{x, y}) && distance[node[0]][node[1]] + cnt <= distance[x][y] ) {
+                        if (dp[x][y] == null || (dp[node[0]][node[1]] + direction).compareTo(dp[x][y]) < 0) {
+                            dp[x][y] = dp[node[0]][node[1]] + direction;
                         }
+                        distance[x][y] = distance[node[0]][node[1]] + cnt;
+                        hasHole = true;
+                        break;
                     }
-                    if (flag) continue;
-                    if (distance[x][y] > distance[node[0]][node[1]] + total) {
-                        distance[x][y] = distance[node[0]][node[1]] + total;
+                }
+                if (hasHole) continue;
+                if (distance[node[0]][node[1]] + cnt < distance[x][y]) {
+                    distance[x][y] = distance[node[0]][node[1]] + cnt;
+                    q.add(new int[]{x, y});
+                    dp[x][y] = dp[node[0]][node[1]] + direction;
+                } else if (distance[node[0]][node[1]] + cnt == distance[x][y]) {
+                    if ((dp[node[0]][node[1]] + direction).compareTo(dp[x][y]) < 0) {
+                        dp[x][y] = dp[node[0]][node[1]] + direction;   
                         q.add(new int[]{x, y});
-                        char D = getUDLR(x,y, node[0], node[1]);
-                        dp[x][y] = dp[node[0]][node[1]] + D;
-
-                    } else if (distance[x][y] == distance[node[0]][node[1]] + total) {
-                        q.add(new int[]{x, y});
-                        char D = getUDLR(x,y, node[0], node[1]);
-                        String tmp = dp[node[0]][node[1]] + D;
-                        dp[x][y] = tmp.compareTo(dp[x][y]) < 0 ?  tmp : dp[x][y];
                     }
                 }
             }
         }
-        return dp[destination[0]][destination[1]] == null ? "impossible" : dp[destination[0]][destination[1]];
+        return dp[hole[0]][hole[1]] == null ? "impossible" : dp[hole[0]][hole[1]];
     }
 
-    private char getUDLR(int x, int y, int x0, int y0) {
-        if (x > x0) {
-            return 'd';
-        } else if (x < x0) {
-            return 'u';
-        } else if (y > y0) {
-            return 'r';
-        } else if (y < y0) {
-            return 'l';
-        } else {
-            return ' ';
-        }
+    private boolean inMaze(int[][] maze, int x, int y) {
+        return x >= 0 && y >=0 && x < maze.length && y < maze[0].length && maze[x][y] != 1;
     }
 }
