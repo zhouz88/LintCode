@@ -28,3 +28,29 @@ class Solution {
         }
     }
 }
+
+class Solution {
+    public boolean canTransform(String start, String end) {
+       int l = 0, r = 0;
+       if (start.length() != end.length()) return false;
+       while (true) {
+           while (l < start.length() && !isLorR(start.charAt(l))) {
+               l++;
+           }
+           while (r < end.length() && !isLorR(end.charAt(r))) {
+               r++;
+           }
+           if (l == start.length() && r == start.length()) return true;
+           if (l == start.length() || r == start.length()) return false;
+           if (start.charAt(l) != end.charAt(r)) return false;
+           if (start.charAt(l) == 'L' && l < r) return false;
+           if (start.charAt(l) == 'R' && l > r) return false;
+           l++;
+           r++;
+       }
+    }
+    
+    private boolean isLorR(char ch) {
+        return ch == 'L' || ch == 'R';
+    }
+}
