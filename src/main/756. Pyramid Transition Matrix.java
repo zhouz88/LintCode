@@ -44,3 +44,47 @@ class Solution {
         }
     }
 }
+
+//version 2
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class Solution {
+    public boolean pyramidTransition(String bottom, List<String> allowed) {
+        Map<String, List<Character>> map = new HashMap<>();
+
+        for (String k : allowed) {
+            String cur = k.substring(0, 2);
+            map.putIfAbsent(cur, new ArrayList<>());
+            map.get(cur).add(k.charAt(2));
+        }
+
+        return solve(bottom, map, 0, new StringBuilder());
+    }
+
+    private boolean solve(String bottom, Map<String, List<Character>> map, int start, StringBuilder sb) {
+        if (bottom.length() == 0) {
+            return true;
+        }
+
+        if (start == bottom.length() - 1) {
+            return solve(sb.toString(), map, 0, new StringBuilder());
+        }
+        String cur = bottom.substring(start, start + 2);
+        if (!map.containsKey(cur)) {
+            return false;
+        } else {
+            for (Character ch : map.get(cur)) {
+                sb.append(ch);
+                if (solve(bottom, map, start + 1, sb)) {
+                    return true;
+                }
+                sb.deleteCharAt(sb.length() - 1);
+            }
+        }
+        return false;
+    }
+}
+
