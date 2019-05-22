@@ -45,9 +45,8 @@ class Solution {
         
         for (int i = 0; i < s.length(); i++) {
             window[s.charAt(i)]++;
-            while (window[s.charAt(i)] > 1 && j <= i) {
-                window[s.charAt(j)]--;
-                j++;
+            while (window[s.charAt(i)] > 1) {
+                window[s.charAt(j++)]--;
             }
             max = Math.max(i - j + 1, max);
         }
