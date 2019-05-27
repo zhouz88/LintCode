@@ -61,3 +61,41 @@ class Solution {
         return true;
     }
 }
+
+//python
+class Solution(object):
+    def solveSudoku(self, board):
+        setsRow = [ set() for i in range(9)]
+        setsCol = [set() for i in range(9)]
+        setsSquare = [set() for i in range(9)]
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] != '.':
+                   setsRow[i].add(board[i][j])
+                if board[j][i] != '.':
+                   setsCol[i].add(board[j][i])
+                if board[3*(i/3)+j/3][3*(i%3)+j%3] != '.':
+                   setsSquare[i].add(board[3*(i/3)+j/3][3*(i%3)+j%3])
+        self.solve(board, setsRow, setsCol, setsSquare)
+
+    def solve(self, board, setsRow, setsCol, setsSquare):
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == '.':
+                    for k in "123456789":
+                        if k not in setsRow[i] and k not in setsCol[j] and k not in setsSquare[3 * (i/3) + j/3]:
+                            board[i][j] = k
+                            setsRow[i].add(k)
+                            setsSquare[3 * (i/3) + j/3].add(k)
+                            setsCol[j].add(k)
+                            if not self.solve(board, setsRow, setsCol, setsSquare):
+                                board[i][j] = '.'
+                                setsRow[i].remove(k)
+                                setsSquare[3 * (i / 3) + j / 3].remove(k)
+                                setsCol[j].remove(k)
+                            else:
+                                return True
+                    return False
+        return True
+
+
