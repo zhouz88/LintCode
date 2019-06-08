@@ -36,3 +36,43 @@ class Solution {
     }
 }
 
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: the root of binary tree
+     * @return: new root
+     */
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        // write your code here
+        if (root == null || root.left == null) {
+            return root;
+        }
+        TreeNode A = root, B = root.left, C = root.right;
+        A.left = null;
+        A.right = null;
+        TreeNode temp1, temp2;
+        while (B != null) {
+            temp1 = B.left;
+            temp2 = B.right;
+            
+            B.left = C;
+            B.right = A;
+            
+            A = B;
+            B = temp1;
+            C = temp2;
+        }
+        return A;
+    }
+}
