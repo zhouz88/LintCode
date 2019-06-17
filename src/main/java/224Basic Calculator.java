@@ -38,3 +38,42 @@ class Solution {
         return sum;
     }
 }
+
+import java.util.ArrayDeque;
+
+class Solution {
+    public int calculate(String s) {
+        int sum = 0;
+        ArrayDeque<Integer> dq = new ArrayDeque<>();
+        dq.addLast(1);
+        int sign = 1;
+        char[] t = s.toCharArray();
+        for (int i = 0; i < t.length; i++) {
+            if (t[i] == ' ') {
+                continue;
+            } else if (Character.isDigit(t[i])) {
+                int j = i - 1;
+                while (j >= 0 && t[j] == ' ') {
+                    j--;
+                }
+                if (j >= 0 && t[j] == '(') {
+                    sign = 1;
+                }
+                int temp = t[i] - '0';
+                while (i + 1 < t.length && Character.isDigit(t[i + 1])) {
+                    temp = 10 * temp + t[++i] - '0';
+                }
+                sum += dq.peekLast() * sign * temp;
+            } else if (t[i] == '+') {
+                sign = 1;
+            } else if (t[i] == '-') {
+                sign = -1;
+            } else if (t[i] == '(') {
+                dq.add(dq.peekLast() * sign);
+            } else {
+                dq.pollLast();
+            }
+        }
+        return sum;
+    }
+}
