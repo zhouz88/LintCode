@@ -30,3 +30,5 @@ class Solution {
         return start;
     }
 }
+
+//If nums[i] 出现在当前数组位置。
