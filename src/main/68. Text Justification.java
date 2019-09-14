@@ -1,46 +1,6 @@
 class Solution {
     public List<String> fullJustify(String[] words, int maxWidth) {
         List<String> res = new ArrayList<>();
-        for (int i = 0; i < words.length;) {
-            int j = i;
-            int total = words[j].length();
-            StringBuilder sb = new StringBuilder();
-            sb.append(words[j]);
-            while (j + 1 < words.length && total + words[j + 1].length() + 1 <= maxWidth) {
-                total += 1 + words[++j].length();
-            }
-            if (j == i || j == words.length - 1) {
-                for (int k = i + 1; k <= j; k++) {
-                    sb.append(" ");
-                    sb.append(words[k]);
-                }
-                for (int k = sb.length(); k < maxWidth; k++) {
-                    sb.append(" ");
-                }
-            } else {
-                int n = (maxWidth - total)/(j - i);
-                int m = (maxWidth - total)%(j - i);
-                for (int k = i + 1; k <= j; k++) {
-                    sb.append(" ");
-                    for (int z = 0; z < n; z++) {
-                        sb.append(" ");
-                    }
-                    if (m-- > 0) {
-                        sb.append(" ");
-                    }
-                    sb.append(words[k]);
-                }
-            }
-            res.add(sb.toString());
-            i = j + 1;
-        }
-        return res;
-    }
-}
-
-class Solution {
-    public List<String> fullJustify(String[] words, int maxWidth) {
-        List<String> res = new ArrayList<>();
         if (words.length == 0) {
             return res;
         }
@@ -60,11 +20,6 @@ class Solution {
     private void addLastLine(int start, int end, String[] words, int maxWidth, List<String> res, int len){
         char[] ret = new char[maxWidth];
         Arrays.fill(ret, ' ');
-        if (start == end) {
-            fillWord(ret, words[start], 0);
-            res.add(new String(ret));
-            return;
-        }
         int idx = 0;
         for (int i = start; i <= end; i++) {
             idx = fillWord(ret, words[i], idx);
@@ -77,8 +32,7 @@ class Solution {
         char[] ret = new char[maxWidth];
         Arrays.fill(ret, ' ');
         if (start == end) {
-            fillWord(ret, words[start], 0);
-            res.add(new String(ret));
+            addLastLine(start, end, words, maxWidth, res, len);
             return;
         }
         int m = (maxWidth - len) / (end - start);
