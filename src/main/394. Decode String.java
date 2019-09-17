@@ -1,39 +1,58 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
-    //s = "2[abc]3[cd]ef", return "abcabccdcdcdef".
     public String decodeString(String s) {
-        Stack<Object> stk = new Stack<>();
+        ArrayDeque<Object> stk = new ArrayDeque<>();
+        // Object '[', ']', Integer, Character;
+        s = "1[" + s + "]";
         for (int i = 0; i < s.length(); i++) {
-            if (Character.isLetter(s.charAt(i))) {
-                stk.add(s.charAt(i) + "");
-            } else if (Character.isDigit(s.charAt(i))) {
-                int tmp = s.charAt(i) - '0';
+            if (Character.isDigit(s.charAt(i))) {
+                int temp = s.charAt(i) - '0';
                 while (i + 1 < s.length() && Character.isDigit(s.charAt(i + 1))) {
-                    tmp = 10 * tmp + s.charAt(++i) - '0';
+                    temp = 10 * temp + s.charAt(++i) - '0';
                 }
-                stk.add(tmp);
+                stk.add(temp);
             } else if (s.charAt(i) == '[') {
-                stk.add("[");
+                stk.add('[');
+            } else if (s.charAt(i) == ']') {
+                List<Object> dq = new ArrayList<>();
+                while (!stk.peekLast().equals('[')){
+                    dq.add(stk.pollLast());
+                }
+                String str = reverse(dq);
+                stk.pollLast();
+                merge(str, stk);
             } else {
-                StringBuilder sb = new StringBuilder();
-                while (!stk.peek().equals("[")) {
-                    sb.insert(0, stk.pop());
-                }
-                StringBuilder sn = new StringBuilder();
-                stk.pop();
-                int k = (Integer)stk.pop();
-                while (k != 0) {
-                    sn.append(sb);
-                    k--;
-                }
-                stk.add(sn.toString());
+                stk.add(s.charAt(i));
             }
         }
-        StringBuilder res = new StringBuilder();
-        for (int i = 0; i < stk.size(); i++) {
-            res.append(stk.get(i));
+        return (String) stk.poll();
+    }
+
+    private String reverse(List<Object> dq) {
+        int i = 0, j = dq.size() - 1;
+        while (i <= j) {
+            Object tmp = dq.get(i);
+            dq.set(i, dq.get(j));
+            dq.set(j, tmp);
+            i++;
+            j--;
         }
-        return res.toString();
+        StringBuilder sb = new StringBuilder();
+        for (Object o : dq) sb.append(o);
+        return sb.toString();
+    }
+    
+    private void merge(String str, ArrayDeque<Object> stk) {
+        if (!stk.isEmpty()) {
+            int number = (int) stk.pollLast();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < number; i++) {
+                sb.append(str);
+            }
+            stk.add(sb.toString());
+        }
     }
 }
