@@ -1,30 +1,27 @@
-import java.util.Arrays;
-
 class Solution {
     public int canCompleteCircuit(int[] gas, int[] cost) {
         boolean[] notStart = new boolean[gas.length];
-        int delta = 0;
-        int start = 0;
-        int i = 0;
-        boolean flag = false;
-        while (true) {
-            flag = false;
+        int n = gas.length, delta = 0;
+        int i = 0, j = 0;
+
+        while (j != n) {
             delta += gas[i] - cost[i];
             if (delta < 0) {
-                int j = start;
                 while (j != i) {
                     if (notStart[j]) return -1;
                     notStart[j] = true;
-                    j = (j + 1) % gas.length;
+                    if (++j == n) return -1;
                 }
                 if (notStart[j]) return -1;
                 notStart[j] = true;
+                j++;
                 delta = 0;
-                start = (i + 1) % gas.length;
-                flag = true;
+                i = (i + 1) % n;
+            } else {
+                i = (i + 1) % n;
+                if (i == j) return j;
             }
-            i = (i + 1) % gas.length;
-            if (i == start && !flag) return i;
         }
+        return -1;
     }
 }
