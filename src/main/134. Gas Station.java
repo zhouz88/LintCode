@@ -46,3 +46,24 @@ class Solution {
         }
     }
 }
+
+
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length, delta = 0;
+        int i = 0, j = 0;
+
+        while (j != n) {
+            delta += gas[i] - cost[i];
+            if (delta < 0) {
+                if (i < j) return -1;
+                delta = 0;
+                j = ++i;
+            } else {
+                i = (i + 1) % n;
+                if (i == j) return j;
+            }
+        }
+        return -1;
+    }
+}
