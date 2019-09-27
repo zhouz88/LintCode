@@ -65,3 +65,55 @@ class Solution {
 	return res;
 }
 }
+
+import java.util.*;
+
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+        List<String> res = new ArrayList<>();
+        PriorityQueue<Pair<String, Integer>> pq = new PriorityQueue<>();
+
+        Map<String, Integer> map = new HashMap<>();
+        for (String str: words) {
+            map.put(str, map.getOrDefault(str, 0) + 1);
+        }
+
+        Pair<String, Integer>[] pairs = new Pair[map.size()];
+        int idx = 0;
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            pairs[idx++] = new Pair<>(e.getKey(), e.getValue());
+        }
+        for (int i = 0; i < pairs.length; i++) {
+            if (i < k) {
+                pq.add(pairs[i]);
+            } else {
+                if (pairs[i].compareTo(pq.peek()) > 0) {
+                    pq.poll();
+                    pq.add(pairs[i]);
+                }
+            }
+        }
+        while (!pq.isEmpty()) {
+            res.add(pq.poll().key);
+        }
+        Collections.reverse(res);
+        return res;
+    }
+
+    private static final class Pair<K extends Comparable<K>,V extends Comparable<V>> implements Comparable<Pair<K, V>>{
+        V value;
+        K key;
+
+        public Pair(K k, V v) {
+            this.key = k;
+            this.value = v;
+        }
+
+        @Override
+        public int compareTo(Pair<K, V> o) {
+            return o.value.compareTo(this.value) == 0 ?
+                    o.key.compareTo(this.key)
+                    : this.value.compareTo(o.value);
+        }
+    }
+}
