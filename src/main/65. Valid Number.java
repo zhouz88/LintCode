@@ -46,3 +46,66 @@ class Solution {
         return flag;
     }
 }
+
+class Solution {
+    public boolean isNumber(String s) {
+        // nubmer e (Integer) optional;
+        int i = 0;
+        boolean dotIsSeen = false;
+        while (i < s.length() && s.charAt(i) == ' ') {
+            i++;
+        }
+        if (i == s.length()) return false;
+        if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+            if (++i == s.length()) return false;
+        }
+        if (s.charAt(i) == '.') {
+            dotIsSeen = true;
+            if (++i == s.length()) return false;
+        }
+        if (!isDigit(s.charAt(i))) return false;
+        while (i + 1 < s.length() && isDigit(s.charAt(i + 1))) {
+            i++;
+        }
+        if (++i == s.length()) return true;
+        //e .
+        if (s.charAt(i) == '.') {
+            if (dotIsSeen) return false;
+            if (++i == s.length()) return true;
+            if (isDigit(s.charAt(i))) {
+                while (i + 1 < s.length() && isDigit(s.charAt(i + 1))) {
+                    i++;
+                }
+                if (++i == s.length()) return true;
+            }
+        }
+        //begin e or space
+        if (s.charAt(i) == ' ') {
+            while (i + 1 < s.length() && s.charAt(i + 1) == ' ') {
+                i++;
+            }
+            if (++i != s.length()) return false;
+            return true;
+        }  
+        if (s.charAt(i) != 'e') return false;
+        if (++i == s.length()) return false;
+        if (s.charAt(i) == '+' || s.charAt(i) == '-') {
+            if (++i == s.length()) return false;
+        }
+        if (!isDigit(s.charAt(i))) return false;
+        while (i + 1 < s.length() && isDigit(s.charAt(i + 1))) {
+            i++;
+        }
+        if (++i == s.length()) return true;
+        if (s.charAt(i) != ' ') return false;
+        while (i + 1 < s.length() && s.charAt(i + 1) == ' ') {
+            i++;
+        }
+        if (++i != s.length()) return false;
+        return true;
+    }
+
+    private boolean isDigit(char ch) {
+        return ch >= '0' && ch <= '9';
+    }
+}
