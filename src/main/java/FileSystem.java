@@ -96,3 +96,86 @@ Note:
  * obj.addContentToFile(filePath,content);
  * String param_4 = obj.readContentFromFile(filePath);
  */
+import java.util.*;
+
+class FileSystem {
+    private static final class FileNode {
+        Map<String, FileNode> next = new HashMap<>();
+        Map<String, String> nodeFiles = new HashMap<>();
+    }
+
+    private FileNode root;
+
+    public FileSystem() {
+        root = new FileNode();
+    }
+
+    public List<String> ls(String path) {
+        String[] t = path.split("/");
+        FileNode node = root;
+        for (int i = 1; i < t.length - 1; i++) {
+            if (!node.next.containsKey(t[i])) {
+                return new ArrayList<>();
+            }
+            node = node.next.get(t[i]);
+        }
+        List<String> ret = new ArrayList<>();
+        if (t.length - 1 >= 0 && node.nodeFiles.containsKey(t[t.length - 1])) {
+            ret.add(t[t.length - 1]);
+            return ret;
+        }
+        if (t.length - 1 >= 0) {
+            node = node.next.get(t[t.length - 1]);
+        }
+        ret.addAll(node.next.keySet());
+        ret.addAll(node.nodeFiles.keySet());
+        Collections.sort(ret);
+        return ret;
+    }
+
+    public void mkdir(String path) {
+        String[] t = path.split("/");
+        FileNode node = root;
+        for (int i = 1; i < t.length; i++) {
+            if (!node.next.containsKey(t[i])) {
+                node.next.put(t[i], new FileNode());
+            }
+            node = node.next.get(t[i]);
+        }
+    }
+
+    public void addContentToFile(String filePath, String content) {
+        String[] t = filePath.split("/");
+        FileNode node = root;
+        for (int i = 1; i < t.length - 1; i++) {
+            if (!node.next.containsKey(t[i])) {
+                node.next.put(t[i], new FileNode());
+            }
+            node = node.next.get(t[i]);
+        }
+        String newFile = node.nodeFiles.getOrDefault(t[t.length - 1], "") + content;
+        node.nodeFiles.put(t[t.length - 1], newFile);
+    }
+
+    public String readContentFromFile(String filePath) {
+        String[] t = filePath.split("/");
+        FileNode node = root;
+        for (int i = 1; i < t.length - 1; i++) {
+            if (!node.next.containsKey(t[i])) {
+                return "";
+            }
+            node = node.next.get(t[i]);
+        }
+        String newFile = node.nodeFiles.getOrDefault(t[t.length - 1], "");
+        return newFile;
+    }
+}
+
+/**
+ * Your FileSystem object will be instantiated and called as such:
+ * FileSystem obj = new FileSystem();
+ * List<String> param_1 = obj.ls(path);
+ * obj.mkdir(path);
+ * obj.addContentToFile(filePath,content);
+ * String param_4 = obj.readContentFromFile(filePath);
+ */
