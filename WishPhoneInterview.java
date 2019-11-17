@@ -18,7 +18,8 @@ class Solution {
                 res += start.get(k) * end.get(k);
             }
         }
-        return res + countZeros * (countZeros - 1);
+        res += countZeros * (countZeros - 1);
+        return res;
     }
 
     private void check(String input, Map<Integer, Integer> start, Map<Integer, Integer> end) {
@@ -46,11 +47,12 @@ class Solution {
         } else if (canStart) {
             start.put(cnt1, start.getOrDefault(cnt1, 0) + 1);
         } else if (canEnd) {
-            end.put(cnt2, start.getOrDefault(cnt1, 0) + 1);
+            end.put(cnt2, end.getOrDefault(cnt2, 0) + 1);
         }
     }
 
     public static void main(String[] args) {
-        System.out.println(new Solution().checkPairs(Arrays.asList("()", "()()", "(((()", ")))", "((()))", "((()(", ")(")));
+        System.out.println(new Solution().checkPairs(Arrays.asList("()", "()()")));
+        System.out.println(new Solution().checkPairs(Arrays.asList("()", "()()", "())", ")", "()())", "(","()(")));
     }
 }
