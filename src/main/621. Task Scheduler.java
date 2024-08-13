@@ -22,6 +22,42 @@ class Solution {
     }
 }
 
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+         if (tasks==null || tasks.length==0){
+            return 0;
+        }
+        int len = tasks.length;
+      //统计任务的频率
+        int[] counter = new int[26];
+        for (int i = 0; i < len; i++) {
+            counter[tasks[i]-'A']++;
+        }
+        //頻率最高的放在後面,貪心
+        Arrays.sort(counter);
+        //行數,貪心 將頻率最大的任務，排成一列，中間間隔 n
+        //贪心策略，尽可能让cpu每个周期执行满任务，不要有空闲存在
+        //使cpu利用率达到最高
+        /*
+            AAABBB
+            n=2            这里要等待 2 个时间片，所以是两列
+     一个cpu周期        A | B  N
+     一个cpu周期        A | B  N
+     一个cpu周期        A | B
+         */
+        int row = counter[25]-1;
+        //總空間數
+        int space = row*n;
+        for (int i = 24; i >=0 ; i--) {
+            //最後一行因為是執行完了，所以不計入空閒等待
+            space-=Math.min(counter[i],row);
+        }
+        //其實嚴格來說，space是不會小於0的，應為行數是取的頻率最大的任務
+        //等於0，就是中間沒有空閒時間分配，cpu達到最大利用率
+        return space>0?space+tasks.length:tasks.length;
+    }
+}
+
 /*
 */
 import java.util.*;
